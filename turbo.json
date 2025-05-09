@@ -10,11 +10,12 @@
     "@archivos-templarios/web#dev": {
       "dependsOn": ["^build"],
       "cache": false,
-      "persistent": false,
+      "persistent": true,
       "env": ["NODE_ENV"]
     },
     "@archivos-templarios/types#dev": {
-      "persistent": false
+      "cache": false,
+      "persistent": true
     },
     "dev": {
       "cache": false,
