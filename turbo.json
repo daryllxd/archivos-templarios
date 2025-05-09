@@ -7,9 +7,22 @@
       "outputs": ["dist/**"]
     },
     "lint": {},
+    "@archivos-templarios/web#dev": {
+      "dependsOn": ["^build"],
+      "cache": false,
+      "persistent": false,
+      "env": ["NODE_ENV"]
+    },
+    "@archivos-templarios/types#dev": {
+      "persistent": false
+    },
     "dev": {
       "cache": false,
-      "persistent": true
+      "persistent": true,
+      "dependsOn": [
+        "@archivos-templarios/types#dev",
+        "@archivos-templarios/web#dev"
+      ]
     }
   }
 }
