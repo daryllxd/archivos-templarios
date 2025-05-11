@@ -42,6 +42,13 @@
         >
           {{ isRecording ? "Stop Recording" : "Start Recording" }}
         </button>
+        <span
+          v-if="isRecording"
+          class="text-lg font-mono text-gray-700 ml-2"
+          aria-live="polite"
+        >
+          {{ formattedDuration }}
+        </span>
         <button
           v-if="audioUrl"
           @click="handleResetRecording"
@@ -69,6 +76,36 @@
           Download Recording
         </a>
       </div>
+      <div v-if="recordings.length > 0" class="mt-8">
+        <h3 class="text-xl font-semibold mb-2">Previous Recordings</h3>
+        <ul class="space-y-4">
+          <li
+            v-for="(rec, idx) in recordings"
+            :key="rec.url"
+            class="flex flex-col md:flex-row md:items-center gap-2 md:gap-4 bg-gray-50 p-4 rounded-lg shadow"
+          >
+            <span class="text-gray-700 font-mono">#{{ idx + 1 }}</span>
+            <audio
+              :src="rec.url"
+              controls
+              class="flex-1"
+              :aria-label="`Playback recording ${idx + 1}`"
+            ></audio>
+            <span class="text-gray-500">{{
+              formatDuration(rec.duration)
+            }}</span>
+            <a
+              :href="rec.url"
+              :download="`dictation-${idx + 1}.webm`"
+              class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition-colors"
+              :aria-label="`Download recording ${idx + 1}`"
+              tabindex="0"
+            >
+              Download
+            </a>
+          </li>
+        </ul>
+      </div>
     </div>
 
     <!-- Placeholder for future audio features -->
@@ -80,7 +117,7 @@
 
 <script setup>
 import useMicrophone from "@/composables/useMicrophone";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 
 const dictationText = ref("");
 
@@ -89,8 +126,27 @@ const handleProcessDictation = () => {
   alert("Dictation processed! (placeholder)");
 };
 
-const { isRecording, audioUrl, startRecording, stopRecording, resetRecording } =
-  useMicrophone();
+const {
+  isRecording,
+  audioUrl,
+  recordingDuration,
+  recordings,
+  startRecording,
+  stopRecording,
+  resetRecording,
+} = useMicrophone();
+
+const formattedDuration = computed(() =>
+  formatDuration(recordingDuration.value)
+);
+
+function formatDuration(seconds) {
+  const m = Math.floor(seconds / 60)
+    .toString()
+    .padStart(2, "0");
+  const s = (seconds % 60).toString().padStart(2, "0");
+  return `${m}:${s}`;
+}
 
 const handleStartRecording = () => {
   resetRecording();
