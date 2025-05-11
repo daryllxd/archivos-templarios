@@ -17,12 +17,13 @@
         <label for="translation" class="block text-lg mb-2"
           >What is the Spanish translation for this unit?</label
         >
-        <div class="flex gap-4">
+        <div class="flex gap-4 items-center">
           <input
             id="translation"
             v-model="userAnswer"
             @keyup.enter="checkAnswer"
             type="text"
+            ref="inputRef"
             class="flex-1 p-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
             placeholder="Enter Spanish translation..."
             :disabled="showFeedback && isCorrect"
@@ -34,6 +35,7 @@
           >
             Check
           </button>
+          <InsertSpecialCharacter @insert="insertAccent" />
         </div>
       </div>
 
@@ -79,7 +81,8 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from "vue";
+import InsertSpecialCharacter from "@/components/ui/InsertSpecialCharacter.vue";
+import { nextTick, onMounted, ref } from "vue";
 
 const units = [
   {
@@ -152,6 +155,7 @@ const feedbackMessage = ref("");
 const score = ref(0);
 const totalQuestions = ref(0);
 const usedUnits = ref([]);
+const inputRef = ref(null);
 
 const getRandomUnit = () => {
   const availableUnits = units.filter(
@@ -200,6 +204,19 @@ const restartQuiz = () => {
   totalQuestions.value = units.length;
   nextQuestion();
 };
+
+function insertAccent(accent) {
+  const input = inputRef.value;
+  if (!input) return;
+  const start = input.selectionStart;
+  const end = input.selectionEnd;
+  userAnswer.value =
+    userAnswer.value.slice(0, start) + accent + userAnswer.value.slice(end);
+  nextTick(() => {
+    input.focus();
+    input.setSelectionRange(start + accent.length, start + accent.length);
+  });
+}
 
 onMounted(() => {
   restartQuiz();
