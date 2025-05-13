@@ -8,6 +8,12 @@ export default defineNuxtConfig({
     { path: "~/components", pathPrefix: false },
     { path: "~/components/ui", pathPrefix: false },
   ],
+  runtimeConfig: {
+    public: {
+      supabaseUrl: process.env.SUPABASE_URL,
+      supabaseAnonKey: process.env.SUPABASE_ANON_KEY,
+    },
+  },
   devtools: { enabled: true },
   vite: {
     plugins: [tsconfigPaths(), tailwindcss()],
