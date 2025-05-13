@@ -60,7 +60,7 @@
         <div class="flex justify-between items-center">
           <h2 class="text-xl font-semibold">Questions</h2>
           <Button
-            type="Button"
+            type="button"
             @click="handleAddQuestion"
             aria-label="Add question"
             tabindex="0"
@@ -77,7 +77,7 @@
           <div class="flex justify-between items-start">
             <h3 class="text-lg font-medium">Question {{ index + 1 }}</h3>
             <Button
-              type="Button"
+              type="button"
               variant="destructive"
               aria-label="Remove question"
               tabindex="0"

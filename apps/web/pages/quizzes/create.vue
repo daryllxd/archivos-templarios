@@ -56,7 +56,7 @@
         <div class="flex justify-between items-center">
           <h2 class="text-xl font-semibold">Questions</h2>
           <Button
-            type="Button"
+            type="button"
             @click="handleAddQuestion"
             class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"
             aria-label="Add question"
@@ -74,7 +74,7 @@
           <div class="flex justify-between items-start">
             <h3 class="text-lg font-medium">Question {{ index + 1 }}</h3>
             <Button
-              type="Button"
+              type="button"
               @click="handleRemoveQuestion(index)"
               class="text-red-600 hover:text-red-800"
               aria-label="Remove question"
