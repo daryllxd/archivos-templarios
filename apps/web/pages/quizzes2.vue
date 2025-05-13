@@ -28,13 +28,13 @@
             placeholder="Enter Spanish translation..."
             :disabled="showFeedback && isCorrect"
           />
-          <button
+          <Button
             @click="checkAnswer"
             class="bg-amber-400 text-white px-4 py-2 rounded hover:bg-amber-600"
             :disabled="!userAnswer.trim()"
           >
             Check
-          </button>
+          </Button>
           <InsertSpecialCharacter @insert="insertAccent" />
         </div>
       </div>
@@ -57,25 +57,25 @@
       </div>
 
       <!-- Next Button -->
-      <button
+      <Button
         v-if="showFeedback && isCorrect"
         @click="nextQuestion"
         class="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-colors"
       >
         Next Unit
-      </button>
+      </Button>
     </div>
 
     <!-- Quiz Complete -->
     <div v-else class="text-center">
       <h2 class="text-2xl font-bold mb-4">Quiz Complete!</h2>
       <p class="mb-4">Your score: {{ score }} out of {{ totalQuestions }}</p>
-      <button
+      <Button
         @click="restartQuiz"
         class="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-colors"
       >
         Start New Quiz
-      </button>
+      </Button>
     </div>
   </div>
 </template>

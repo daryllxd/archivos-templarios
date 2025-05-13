@@ -37,14 +37,14 @@
             >
               Edit
             </NuxtLink>
-            <button
-              @click="handleDeleteQuiz(quiz.id)"
-              class="text-red-600 hover:text-red-800"
+            <Button
+              variant="destructive"
               aria-label="Delete quiz"
               tabindex="0"
+              @click="handleDeleteQuiz(quiz.id)"
             >
               Delete
-            </button>
+            </Button>
           </div>
         </div>
       </div>

@@ -59,15 +59,14 @@
       <div class="space-y-4">
         <div class="flex justify-between items-center">
           <h2 class="text-xl font-semibold">Questions</h2>
-          <button
-            type="button"
+          <Button
+            type="Button"
             @click="handleAddQuestion"
-            class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"
             aria-label="Add question"
             tabindex="0"
           >
             Add Question
-          </button>
+          </Button>
         </div>
 
         <div
@@ -77,15 +76,15 @@
         >
           <div class="flex justify-between items-start">
             <h3 class="text-lg font-medium">Question {{ index + 1 }}</h3>
-            <button
-              type="button"
-              @click="handleRemoveQuestion(index)"
-              class="text-red-600 hover:text-red-800"
+            <Button
+              type="Button"
+              variant="destructive"
               aria-label="Remove question"
               tabindex="0"
+              @click="handleRemoveQuestion(index)"
             >
               Remove
-            </button>
+            </Button>
           </div>
 
           <div>
@@ -136,7 +135,7 @@
         >
           Cancel
         </NuxtLink>
-        <button
+        <Button
           type="submit"
           class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
           :disabled="!isValid"
@@ -144,7 +143,7 @@
           tabindex="0"
         >
           Save Changes
-        </button>
+        </Button>
       </div>
     </form>
   </div>
