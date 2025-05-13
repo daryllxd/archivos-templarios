@@ -1,11 +1,6 @@
 <template>
   <button
-    :class="[
-      'inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
-      variants[variant],
-      sizes[size],
-      className,
-    ]"
+    :class="buttonClasses"
     :disabled="disabled || loading"
     v-bind="$attrs"
   >
@@ -36,7 +31,7 @@
 </template>
 
 <script setup>
-defineProps({
+const { variant, size, disabled, loading, className } = defineProps({
   variant: {
     type: String,
     default: "default",
@@ -85,4 +80,11 @@ const sizes = {
   lg: "h-11 rounded-md px-8",
   icon: "h-10 w-10",
 };
+
+const buttonClasses = computed(() => [
+  "inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  variants[variant],
+  sizes[size],
+  className,
+]);
 </script>
