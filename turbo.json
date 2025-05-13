@@ -24,6 +24,11 @@
         "@archivos-templarios/types#dev",
         "@archivos-templarios/web#dev"
       ]
+    },
+    "@archivos-templarios/web#build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**"],
+      "env": ["NODE_ENV"]
     }
   }
 }
