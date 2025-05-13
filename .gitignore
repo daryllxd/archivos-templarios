@@ -48,3 +48,9 @@ next-env.d.ts
 # Cache
 .cache
 .eslintcache 
+
+# Supabase
+supabase/.temp
+supabase/.output
+supabase/.env
+supabase/docker
