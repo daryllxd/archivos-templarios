@@ -25,6 +25,7 @@
 <script setup>
 const links = [
   { to: "/", text: "Home" },
+  { to: "/register", text: "Register" },
   { to: "/quizzes", text: "Quizzes" },
   { to: "/about", text: "About" },
 ];
