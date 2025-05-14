@@ -1,4 +1,11 @@
 <script setup lang="ts">
+defineNuxtRouteMiddleware((_to, _from) => {
+  const user = useSupabaseUser();
+  if (user.value) {
+    return navigateTo("/");
+  }
+});
+
 const supabase = useSupabaseClient();
 
 const email = ref("");
@@ -17,6 +24,8 @@ const signInWithPassword = async () => {
     if (error) {
       // Handle error, e.g., show a message to the user
       errorMsg.value = error.message;
+    } else {
+      navigateTo("/");
     }
   } catch (error) {
     // Handle unexpected errors
@@ -26,11 +35,6 @@ const signInWithPassword = async () => {
     loading.value = false;
   }
 };
-
-// const signOut = async () => {
-//   const { error } = await supabase.auth.signOut();
-//   if (error) console.log(error);
-// };
 </script>
 
 <template>
