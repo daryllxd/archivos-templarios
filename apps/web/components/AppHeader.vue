@@ -27,14 +27,22 @@
         >
           Login
         </NuxtLink>
-        <button
-          v-if="user"
-          class="ml-2 text-sm underline hover:text-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-400 rounded transition"
-          aria-label="Sign out"
-          @click="handleSignOut"
-        >
-          Sign out
-        </button>
+        <div v-if="user" class="flex items-center gap-2">
+          <img
+            v-if="avatarUrl"
+            :src="avatarUrl"
+            alt="User avatar"
+            class="w-8 h-8 rounded-full border border-white shadow"
+            referrerpolicy="no-referrer"
+          />
+          <button
+            class="ml-2 text-sm underline hover:text-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-400 rounded transition"
+            aria-label="Sign out"
+            @click="handleSignOut"
+          >
+            Sign out
+          </button>
+        </div>
       </nav>
     </div>
   </header>
@@ -42,6 +50,7 @@
 
 <script setup>
 import { useSupabaseClient, useSupabaseUser } from "#imports";
+import { computed as vueComputed } from "vue";
 import { useRouter } from "vue-router";
 
 const links = [
@@ -54,6 +63,16 @@ const links = [
 const user = useSupabaseUser();
 const supabase = useSupabaseClient();
 const router = useRouter();
+
+const avatarUrl = vueComputed(() => {
+  if (!user.value) return null;
+  // Google OAuth: avatar_url or picture
+  return (
+    user.value.user_metadata?.avatar_url ||
+    user.value.user_metadata?.picture ||
+    null
+  );
+});
 
 const handleSignOut = async () => {
   await supabase.auth.signOut();
