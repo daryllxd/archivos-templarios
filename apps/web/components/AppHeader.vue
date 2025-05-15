@@ -53,16 +53,16 @@ import { useSupabaseClient, useSupabaseUser } from "#imports";
 import { computed as vueComputed } from "vue";
 import { useRouter } from "vue-router";
 
-const links = [
-  { to: "/", text: "Home" },
-  { to: "/register", text: "Register" },
-  { to: "/quizzes", text: "Quizzes" },
-  { to: "/about", text: "About" },
-];
-
 const user = useSupabaseUser();
 const supabase = useSupabaseClient();
 const router = useRouter();
+
+const links = [
+  { to: "/", text: "Home" },
+  user.value ? { to: "/quizzes", text: "Quizzes" } : null,
+  { to: "/about", text: "About" },
+  !user.value ? { to: "/register", text: "Register" } : null,
+].filter(Boolean);
 
 const avatarUrl = vueComputed(() => {
   if (!user.value) return null;
