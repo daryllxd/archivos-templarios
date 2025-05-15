@@ -32,5 +32,14 @@ export default defineNuxtConfig({
     "@nuxt/ui",
     "@nuxt/image",
     "@nuxtjs/supabase",
+    "shadcn-nuxt",
   ],
+  shadcn: {
+    prefix: "",
+    /**
+     * Directory that the component lives in.
+     * @default "./components/ui"
+     */
+    componentDir: "./components/ui",
+  },
 });

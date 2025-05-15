@@ -1,6 +1,14 @@
 // middleware/auth.global.ts
 export default defineNuxtRouteMiddleware((to, from) => {
-  if (["/auth/callback", "/about", "/login", "/register"].includes(to.path)) {
+  const allowedRoutes = [
+    "/auth/callback",
+    "/about",
+    "/login",
+    "/register",
+    "/",
+  ];
+
+  if (allowedRoutes.includes(to.path)) {
     console.log("allowed");
     return;
   }
