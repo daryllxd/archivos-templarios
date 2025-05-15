@@ -16,15 +16,16 @@
     "@nuxt/icon": "^1.12.0",
     "@nuxt/image": "^1.10.0",
     "@nuxt/scripts": "^0.11.6",
-    "@nuxtjs/supabase": "^1.5.1",
     "@nuxt/test-utils": "^3.18.0",
     "@nuxt/ui": "^3.1.1",
+    "@nuxtjs/supabase": "^1.5.1",
     "@supabase/supabase-js": "^2.49.4",
     "@tailwindcss/vite": "^4.1.5",
     "nuxt": "^3.17.2",
     "tailwindcss": "^4.1.5",
     "vue": "^3.5.13",
-    "vue-router": "^4.5.1"
+    "vue-router": "^4.5.1",
+    "vue-typewriter-effect": "^1.0.1"
   },
   "devDependencies": {
     "@nuxt/devtools": "latest",
