@@ -35,4 +35,5 @@ Use consts instead of functions, for example, “const toggle = () =>”. Also, 
 
 Repo-specific gotchas
 
+- This is a pnpm mono-repo (apps/web is primarily where we want to code teh application).
 - The localhost port is typically 4000.

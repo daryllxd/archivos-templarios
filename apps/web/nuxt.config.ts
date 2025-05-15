@@ -1,3 +1,4 @@
+import Aura from "@primeuix/themes/aura";
 import tailwindcss from "@tailwindcss/vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 
@@ -33,6 +34,7 @@ export default defineNuxtConfig({
     "@nuxt/image",
     "@nuxtjs/supabase",
     "shadcn-nuxt",
+    "@primevue/nuxt-module",
   ],
   shadcn: {
     prefix: "",
@@ -41,5 +43,15 @@ export default defineNuxtConfig({
      * @default "./components/ui"
      */
     componentDir: "./components/ui",
+  },
+  primevue: {
+    options: {
+      theme: {
+        preset: Aura,
+      },
+    },
+    components: {
+      include: ["Dropdown"],
+    },
   },
 });
