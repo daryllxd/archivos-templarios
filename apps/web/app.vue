@@ -2,11 +2,6 @@
   <div>
     <AppHeader />
     <main class="container mx-auto p-4">
-      <ul>
-        <li v-for="instrument in instruments" :key="instrument.id">
-          {{ instrument.name }}
-        </li>
-      </ul>
       <NuxtPage />
     </main>
   </div>

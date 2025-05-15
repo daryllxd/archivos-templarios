@@ -19,6 +19,9 @@ export default defineNuxtConfig({
     plugins: [tsconfigPaths(), tailwindcss()],
   },
   css: ["~/assets/css/main.css"],
+  supabase: {
+    redirect: false,
+  },
 
   modules: [
     "@nuxt/eslint",
@@ -28,5 +31,6 @@ export default defineNuxtConfig({
     "@nuxt/test-utils",
     "@nuxt/ui",
     "@nuxt/image",
+    "@nuxtjs/supabase",
   ],
 });
