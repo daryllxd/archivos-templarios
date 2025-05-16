@@ -57,12 +57,14 @@ import { computed as vueComputed } from "vue";
 import { useRouter } from "vue-router";
 import LanguageSwitcher from "./LanguageSwitcher.vue";
 
+const { $i18n } = useNuxtApp();
+
 const user = useSupabaseUser();
 const supabase = useSupabaseClient();
 const router = useRouter();
 
 const links = [
-  { to: "/", text: "Home" },
+  { to: "/", text: $i18n.t("home") },
   user.value ? { to: "/quizzes", text: "Quizzes" } : null,
   { to: "/about", text: "About" },
   !user.value ? { to: "/register", text: "Register" } : null,
