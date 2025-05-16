@@ -17,7 +17,7 @@
         >
           {{ link.text }}
         </NuxtLink>
-        <div class="w-40">
+        <div class="w-[200px]">
           <LanguageSwitcher />
         </div>
         <NuxtLink
@@ -28,7 +28,7 @@
             'text-amber-400 [&:hover]:text-amber-600': $route.path === '/login',
           }"
         >
-          Login
+          {{ t.login }}
         </NuxtLink>
         <div v-if="user" class="flex items-center gap-2">
           <img
@@ -40,10 +40,10 @@
           />
           <button
             class="ml-2 text-sm underline hover:text-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-400 rounded transition"
-            aria-label="Sign out"
+            :aria-label="t.signOut"
             @click="handleSignOut"
           >
-            Sign out
+            {{ t.signOut }}
           </button>
         </div>
       </nav>
@@ -63,12 +63,23 @@ const user = useSupabaseUser();
 const supabase = useSupabaseClient();
 const router = useRouter();
 
-const links = [
-  { to: "/", text: $i18n.t("home") },
-  user.value ? { to: "/quizzes", text: "Quizzes" } : null,
-  { to: "/about", text: "About" },
-  !user.value ? { to: "/register", text: "Register" } : null,
-].filter(Boolean);
+const t = vueComputed(() => ({
+  home: $i18n.t("home"),
+  quizzes: $i18n.t("quizzes"),
+  about: $i18n.t("about"),
+  register: $i18n.t("register"),
+  login: $i18n.t("login"),
+  signOut: $i18n.t("signOut"),
+}));
+
+const links = vueComputed(() =>
+  [
+    { to: "/", text: t.value.home },
+    user.value ? { to: "/quizzes", text: t.value.quizzes } : null,
+    { to: "/about", text: t.value.about },
+    !user.value ? { to: "/register", text: t.value.register } : null,
+  ].filter(Boolean)
+);
 
 const avatarUrl = vueComputed(() => {
   if (!user.value) return null;
