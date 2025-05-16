@@ -17,6 +17,9 @@
         >
           {{ link.text }}
         </NuxtLink>
+        <div class="w-40">
+          <LanguageSwitcher />
+        </div>
         <NuxtLink
           v-if="!user"
           to="/login"
@@ -52,6 +55,7 @@
 import { useSupabaseClient, useSupabaseUser } from "#imports";
 import { computed as vueComputed } from "vue";
 import { useRouter } from "vue-router";
+import LanguageSwitcher from "./LanguageSwitcher.vue";
 
 const user = useSupabaseUser();
 const supabase = useSupabaseClient();
