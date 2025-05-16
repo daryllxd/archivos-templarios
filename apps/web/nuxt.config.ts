@@ -23,7 +23,6 @@ export default defineNuxtConfig({
   supabase: {
     redirect: false,
   },
-
   modules: [
     "@nuxt/eslint",
     "@nuxt/fonts",
@@ -35,7 +34,16 @@ export default defineNuxtConfig({
     "@nuxtjs/supabase",
     "shadcn-nuxt",
     "@primevue/nuxt-module",
+    "@nuxtjs/i18n",
   ],
+  i18n: {
+    defaultLocale: "en",
+    langDir: "./locales/",
+    locales: [
+      { code: "en", name: "English", file: "en.json" },
+      { code: "es", name: "Español", file: "es.json" },
+    ],
+  },
   shadcn: {
     prefix: "",
     /**
