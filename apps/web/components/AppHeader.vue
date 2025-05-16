@@ -28,7 +28,7 @@
             'text-amber-400 [&:hover]:text-amber-600': $route.path === '/login',
           }"
         >
-          {{ t.login }}
+          {{ t("login") }}
         </NuxtLink>
         <div v-if="user" class="flex items-center gap-2">
           <img
@@ -40,10 +40,10 @@
           />
           <button
             class="ml-2 text-sm underline hover:text-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-400 rounded transition"
-            :aria-label="t.signOut"
+            :aria-label="t('signOut')"
             @click="handleSignOut"
           >
-            {{ t.signOut }}
+            {{ t("signOut") }}
           </button>
         </div>
       </nav>
@@ -53,35 +53,27 @@
 
 <script setup>
 import { useSupabaseClient, useSupabaseUser } from "#imports";
-import { computed as vueComputed } from "vue";
+import { computed } from "vue";
+import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 import LanguageSwitcher from "./LanguageSwitcher.vue";
 
-const { $i18n } = useNuxtApp();
+const { t } = useI18n();
 
 const user = useSupabaseUser();
 const supabase = useSupabaseClient();
 const router = useRouter();
 
-const t = vueComputed(() => ({
-  home: $i18n.t("home"),
-  quizzes: $i18n.t("quizzes"),
-  about: $i18n.t("about"),
-  register: $i18n.t("register"),
-  login: $i18n.t("login"),
-  signOut: $i18n.t("signOut"),
-}));
-
-const links = vueComputed(() =>
+const links = computed(() =>
   [
-    { to: "/", text: t.value.home },
-    user.value ? { to: "/quizzes", text: t.value.quizzes } : null,
-    { to: "/about", text: t.value.about },
-    !user.value ? { to: "/register", text: t.value.register } : null,
+    { to: "/", text: t("home") },
+    user.value ? { to: "/quizzes", text: t("quizzes") } : null,
+    { to: "/about", text: t("about") },
+    !user.value ? { to: "/register", text: t("register") } : null,
   ].filter(Boolean)
 );
 
-const avatarUrl = vueComputed(() => {
+const avatarUrl = computed(() => {
   if (!user.value) return null;
   // Google OAuth: avatar_url or picture
   return (
