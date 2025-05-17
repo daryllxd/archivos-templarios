@@ -35,6 +35,7 @@ export default defineNuxtConfig({
     "shadcn-nuxt",
     "@primevue/nuxt-module",
     "@nuxtjs/i18n",
+    "@pinia/nuxt",
   ],
   i18n: {
     defaultLocale: "en",
