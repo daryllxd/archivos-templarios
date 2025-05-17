@@ -1,5 +1,5 @@
 <template>
-  <header class="bg-gray-800 text-white p-4">
+  <header class="bg-gray-800 dark:bg-gray-900 text-white p-4">
     <div class="container mx-auto flex justify-between items-center">
       <h1 class="text-xl font-bold">Archivos Templarios</h1>
       <nav class="space-x-4 flex items-center">
@@ -20,6 +20,16 @@
         <div class="w-[200px]">
           <LanguageSwitcher />
         </div>
+        <button
+          class="p-2 rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-400"
+          :aria-label="isDark ? t('switchToLight') : t('switchToDark')"
+          @click="handleThemeToggle"
+        >
+          <Icon
+            :name="isDark ? 'ph:sun-bold' : 'ph:moon-bold'"
+            class="w-5 h-5"
+          />
+        </button>
         <NuxtLink
           v-if="!user"
           to="/login"
@@ -53,12 +63,15 @@
 
 <script setup>
 import { useSupabaseClient, useSupabaseUser } from "#imports";
-import { computed } from "vue";
+import { computed, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
+import { useThemeStore } from "~/stores/useThemeStore";
 import LanguageSwitcher from "./LanguageSwitcher.vue";
 
 const { t } = useI18n();
+const themeStore = useThemeStore();
+const isDark = computed(() => themeStore.isDark);
 
 const user = useSupabaseUser();
 const supabase = useSupabaseClient();
@@ -87,4 +100,12 @@ const handleSignOut = async () => {
   await supabase.auth.signOut();
   router.push("/login");
 };
+
+const handleThemeToggle = () => {
+  themeStore.toggleTheme();
+};
+
+onMounted(() => {
+  themeStore.initTheme();
+});
 </script>
