@@ -5,5 +5,7 @@
   "about": "Acerca de",
   "register": "Registrarse",
   "login": "Iniciar sesión",
-  "signOut": "Cerrar sesión"
+  "signOut": "Cerrar sesión",
+  "switchToDark": "Cambiar a modo oscuro",
+  "switchToLight": "Cambiar a modo claro"
 }

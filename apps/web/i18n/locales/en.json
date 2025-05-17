@@ -5,5 +5,7 @@
   "about": "About",
   "register": "Register",
   "login": "Login",
-  "signOut": "Sign out"
+  "signOut": "Sign Out",
+  "switchToDark": "Switch to dark mode",
+  "switchToLight": "Switch to light mode"
 }
