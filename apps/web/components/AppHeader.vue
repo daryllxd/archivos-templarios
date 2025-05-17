@@ -1,5 +1,5 @@
 <template>
-  <header class="bg-gray-800 text-white p-4">
+  <header class="bg-gray-800 dark:bg-gray-900 text-white p-4">
     <div class="container mx-auto flex justify-between items-center">
       <h1 class="text-xl font-bold">Archivos Templarios</h1>
       <nav class="space-x-4 flex items-center">
@@ -20,6 +20,7 @@
         <div class="w-[200px]">
           <LanguageSwitcher />
         </div>
+        <ThemeSwitcher />
         <NuxtLink
           v-if="!user"
           to="/login"
@@ -57,6 +58,7 @@ import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 import LanguageSwitcher from "./LanguageSwitcher.vue";
+import ThemeSwitcher from "./header/ThemeSwitcher.vue";
 
 const { t } = useI18n();
 

@@ -37,3 +37,4 @@ Repo-specific gotchas
 
 - This is a pnpm mono-repo (apps/web is primarily where we want to code teh application).
 - The localhost port is typically 4000.
+- When writing Tailwind classes, if it's possible to group them locally with clsx in apps/web/utils
