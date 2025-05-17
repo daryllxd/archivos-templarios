@@ -9,6 +9,7 @@ export default defineNuxtConfig({
     { path: "~/components", pathPrefix: false },
     { path: "~/components/ui", pathPrefix: false },
   ],
+  plugins: ["~/plugins/theme.client.ts"],
   runtimeConfig: {
     public: {
       supabaseUrl: process.env.SUPABASE_URL,
@@ -37,6 +38,9 @@ export default defineNuxtConfig({
     "@nuxtjs/i18n",
     "@pinia/nuxt",
   ],
+  ui: {
+    darkMode: false,
+  },
   i18n: {
     defaultLocale: "en",
     langDir: "./locales/",
@@ -52,6 +56,7 @@ export default defineNuxtConfig({
      * @default "./components/ui"
      */
     componentDir: "./components/ui",
+    darkMode: false,
   },
   primevue: {
     options: {
@@ -60,7 +65,7 @@ export default defineNuxtConfig({
       },
     },
     components: {
-      include: ["Dropdown"],
+      include: ["Dropdown", "ToggleSwitch"],
     },
   },
 });

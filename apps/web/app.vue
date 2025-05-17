@@ -17,7 +17,15 @@ const supabase = createClient(
   config.public.supabaseUrl,
   config.public.supabaseAnonKey
 );
-const instruments = ref([]);
+
+interface Instrument {
+  id: number;
+  name: string;
+  // Add other instrument properties as needed
+}
+
+const instruments = ref<Instrument[]>([]);
+
 async function getInstruments() {
   const { data, error } = await supabase.from("instruments").select();
 
@@ -25,9 +33,14 @@ async function getInstruments() {
   if (error) {
     console.error("Supabase error:", error);
   }
-  instruments.value = data;
+  instruments.value = data || [];
 }
+
 onMounted(() => {
   getInstruments();
 });
 </script>
+
+<style>
+@import "~/assets/css/main.css";
+</style>
