@@ -1,11 +1,28 @@
 {
   "home": "Inicio",
-  "selectLanguage": "Seleccionar Idioma",
+  "selectLanguage": "Seleccionar idioma",
   "quizzes": "Cuestionarios",
   "about": "Acerca de",
   "register": "Registrarse",
   "login": "Iniciar sesión",
   "signOut": "Cerrar sesión",
   "switchToDark": "Cambiar a modo oscuro",
-  "switchToLight": "Cambiar a modo claro"
+  "switchToLight": "Cambiar a modo claro",
+  "profile": {
+    "title": "Perfil",
+    "memberSince": "Miembro desde",
+    "loading": "Cargando perfil...",
+    "name": "Nombre",
+    "namePlaceholder": "Introduce tu nombre",
+    "url": "URL del perfil",
+    "urlPlaceholder": "Introduce la URL de tu perfil",
+    "biography": "Biografía",
+    "biographyPlaceholder": "Cuéntanos sobre ti...",
+    "country": "País",
+    "selectCountry": "Selecciona un país"
+  },
+  "common": {
+    "save": "Guardar cambios",
+    "saving": "Guardando..."
+  }
 }
