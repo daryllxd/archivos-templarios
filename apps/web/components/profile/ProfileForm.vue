@@ -102,7 +102,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 interface Props {
@@ -131,11 +131,39 @@ const emit = defineEmits<{
 const { t } = useI18n();
 const isSubmitting = ref(false);
 
+interface ProfileResponse {
+  success: boolean;
+  profile: {
+    id: string;
+    name: string | null;
+    url: string | null;
+    biography: string | null;
+    country: string | null;
+  };
+}
+
 const formData = ref({
   name: props.user.name || "",
   url: props.user.url || "",
   biography: props.user.biography || "",
   country: props.user.country || "",
+});
+
+// Fetch profile data on mount
+onMounted(async () => {
+  try {
+    const response = await $fetch<ProfileResponse>("/api/profile/get");
+    if (response.success) {
+      formData.value = {
+        name: response.profile.name || "",
+        url: response.profile.url || "",
+        biography: response.profile.biography || "",
+        country: response.profile.country || "",
+      };
+    }
+  } catch (error) {
+    console.error("Error fetching profile:", error);
+  }
 });
 
 // List of countries - you might want to move this to a separate file
@@ -152,15 +180,36 @@ const countries = [
   { code: "BR", name: "Brazil" },
 ];
 
+interface ApiResponse {
+  success: boolean;
+  user: {
+    id: string;
+    name?: string;
+    url?: string;
+    biography?: string;
+    country?: string;
+  };
+}
+
 const handleSubmit = async () => {
   isSubmitting.value = true;
   try {
-    emit("update", {
-      name: formData.value.name,
-      url: formData.value.url,
-      biography: formData.value.biography,
-      country: formData.value.country,
+    const response = await $fetch<ApiResponse>("/api/profile/update", {
+      method: "POST",
+      body: {
+        name: formData.value.name,
+        url: formData.value.url,
+        biography: formData.value.biography,
+        country: formData.value.country,
+      },
     });
+
+    if (response.success) {
+      emit("update", response.user);
+    }
+  } catch (error) {
+    console.error("Error updating profile:", error);
+    // You might want to show an error message to the user here
   } finally {
     isSubmitting.value = false;
   }
