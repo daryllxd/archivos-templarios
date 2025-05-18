@@ -9,7 +9,6 @@
         v-if="user"
         class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6"
       >
-        <!-- Profile Header -->
         <div class="flex items-center space-x-4 mb-6">
           <div
             class="w-20 h-20 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center"

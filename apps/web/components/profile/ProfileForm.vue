@@ -1,5 +1,43 @@
 <template>
   <form class="space-y-6" @submit.prevent="handleSubmit">
+    <!-- Name -->
+    <div>
+      <label
+        for="name"
+        class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+      >
+        {{ t("profile.name") }}
+      </label>
+      <div class="mt-1">
+        <InputText
+          id="name"
+          v-model="formData.name"
+          class="w-full"
+          :maxlength="50"
+          :placeholder="t('profile.namePlaceholder')"
+        />
+      </div>
+    </div>
+
+    <!-- URL -->
+    <div>
+      <label
+        for="url"
+        class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+      >
+        {{ t("profile.url") }}
+      </label>
+      <div class="mt-1">
+        <InputText
+          id="url"
+          v-model="formData.url"
+          class="w-full"
+          :maxlength="50"
+          :placeholder="t('profile.urlPlaceholder')"
+        />
+      </div>
+    </div>
+
     <!-- Biography -->
     <div>
       <label
@@ -9,11 +47,11 @@
         {{ t("profile.biography") }}
       </label>
       <div class="mt-1">
-        <textarea
+        <TextArea
           id="biography"
           v-model="formData.biography"
-          rows="4"
-          class="block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-amber-500 focus:ring-amber-500 dark:bg-gray-700 dark:text-white sm:text-sm"
+          class="w-full"
+          :rows="4"
           :placeholder="t('profile.biographyPlaceholder')"
         />
       </div>
@@ -70,6 +108,8 @@ import { useI18n } from "vue-i18n";
 interface Props {
   user: {
     id: string;
+    name?: string;
+    url?: string;
     biography?: string;
     country?: string;
   };
@@ -77,13 +117,23 @@ interface Props {
 
 const props = defineProps<Props>();
 const emit = defineEmits<{
-  (e: "update", data: { biography?: string; country?: string }): void;
+  (
+    e: "update",
+    data: {
+      name?: string;
+      url?: string;
+      biography?: string;
+      country?: string;
+    }
+  ): void;
 }>();
 
 const { t } = useI18n();
 const isSubmitting = ref(false);
 
 const formData = ref({
+  name: props.user.name || "",
+  url: props.user.url || "",
   biography: props.user.biography || "",
   country: props.user.country || "",
 });
@@ -106,6 +156,8 @@ const handleSubmit = async () => {
   isSubmitting.value = true;
   try {
     emit("update", {
+      name: formData.value.name,
+      url: formData.value.url,
       biography: formData.value.biography,
       country: formData.value.country,
     });

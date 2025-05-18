@@ -65,7 +65,7 @@ export default defineNuxtConfig({
       },
     },
     components: {
-      include: ["Dropdown", "ToggleSwitch"],
+      include: ["Dropdown", "ToggleSwitch", "InputText", "Textarea"],
     },
   },
 });
