@@ -7,5 +7,18 @@
   "login": "Login",
   "signOut": "Sign Out",
   "switchToDark": "Switch to dark mode",
-  "switchToLight": "Switch to light mode"
+  "switchToLight": "Switch to light mode",
+  "profile": {
+    "title": "Profile",
+    "memberSince": "Member since",
+    "loading": "Loading profile...",
+    "biography": "Biography",
+    "biographyPlaceholder": "Tell us about yourself...",
+    "country": "Country",
+    "selectCountry": "Select a country"
+  },
+  "common": {
+    "save": "Save Changes",
+    "saving": "Saving..."
+  }
 }
