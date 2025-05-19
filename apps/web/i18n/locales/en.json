@@ -24,5 +24,15 @@
   "common": {
     "save": "Save Changes",
     "saving": "Saving..."
+  },
+  "collage": {
+    "title": "Create Collage",
+    "selectImages": "Select Images",
+    "preview": "Collage Preview",
+    "maxImages": "Select up to 4 images",
+    "saveCollage": "Save Collage",
+    "savingCollage": "Saving...",
+    "success": "Collage saved successfully!",
+    "error": "Error saving collage"
   }
 }
