@@ -429,15 +429,30 @@ const handleDownload = async () => {
 
           // Get the Panzoom instance for this image
           const panzoom = panzoomInstances.value[index];
+          console.log(`🟢 Panzoom instance for image ${index}:`, panzoom);
           if (panzoom) {
-            const transform = panzoom.getTransform();
+            const scale = panzoom.getScale();
+            const pan = panzoom.getPan();
+            console.log(`🟡 Scale for image ${index}:`, scale);
+            console.log(`🟣 Pan for image ${index}:`, pan);
+
             ctx.save();
+            // Create clipping path for the cell
+            ctx.beginPath();
+            ctx.rect(x, y, imageWidth, imageHeight);
+            ctx.clip();
+
+            // Apply transformations
             ctx.translate(x + imageWidth / 2, y + imageHeight / 2);
-            ctx.scale(transform.scale, transform.scale);
+            ctx.scale(scale, scale);
             ctx.translate(-imageWidth / 2, -imageHeight / 2);
+
+            // Draw the image
             ctx.drawImage(img, 0, 0, imageWidth, imageHeight);
             ctx.restore();
+            console.log(`🟠 Drew image ${index} with transform and clipping`);
           } else {
+            console.log(`🔴 No Panzoom instance found for image ${index}`);
             ctx.drawImage(img, x, y, imageWidth, imageHeight);
           }
           resolve(null);
