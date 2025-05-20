@@ -199,18 +199,43 @@
             <div
               v-for="(image, index) in selectedImages"
               :key="index"
-              class="relative"
+              class="relative overflow-hidden"
               :class="{
                 'w-full h-full': layoutStyle === 'grid',
                 'w-full h-1/4': layoutStyle === 'column',
                 'w-1/4 h-full': layoutStyle === 'row',
               }"
             >
-              <img
-                :src="image"
-                :alt="`Collage image ${index + 1}`"
-                class="w-full h-full object-cover"
-              />
+              <div
+                :ref="(el) => setPanzoomRef(el, index)"
+                class="w-full h-full"
+              >
+                <img
+                  :src="image"
+                  :alt="`Collage image ${index + 1}`"
+                  class="w-full h-full object-cover"
+                />
+              </div>
+              <div class="absolute bottom-2 right-2 flex gap-2">
+                <button
+                  class="p-1 bg-black bg-opacity-50 text-white rounded hover:bg-opacity-75"
+                  @click="handleZoom(index, 1.5)"
+                >
+                  <Icon name="ph:plus-bold" class="w-4 h-4" />
+                </button>
+                <button
+                  class="p-1 bg-black bg-opacity-50 text-white rounded hover:bg-opacity-75"
+                  @click="handleZoom(index, 0.8)"
+                >
+                  <Icon name="ph:minus-bold" class="w-4 h-4" />
+                </button>
+                <button
+                  class="p-1 bg-black bg-opacity-50 text-white rounded hover:bg-opacity-75"
+                  @click="resetZoom(index)"
+                >
+                  <Icon name="ph:arrows-in-simple-bold" class="w-4 h-4" />
+                </button>
+              </div>
             </div>
             <div
               v-for="n in maxImages - selectedImages.length"
@@ -230,7 +255,15 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import Panzoom from "@panzoom/panzoom";
+import {
+  computed,
+  nextTick,
+  onBeforeUnmount,
+  onMounted,
+  ref,
+  watch,
+} from "vue";
 import { useI18n } from "vue-i18n";
 
 const { t } = useI18n();
@@ -255,7 +288,7 @@ const availableImages = [
   "/images/neutral_dropship.gif",
 ];
 
-const selectedImages = ref<string[]>([]);
+const selectedImages = ref<string[]>(["/images/terran_firebat.gif"]);
 const gridSize = ref(2);
 const layoutStyle = ref("grid");
 
@@ -282,10 +315,64 @@ const toggleImage = (image: string) => {
   const index = selectedImages.value.indexOf(image);
   if (index === -1) {
     if (selectedImages.value.length < maxImages.value) {
-      selectedImages.value.push(image);
+      selectedImages.value = [...selectedImages.value, image];
     }
   } else {
-    selectedImages.value.splice(index, 1);
+    selectedImages.value = selectedImages.value.filter((_, i) => i !== index);
+  }
+};
+
+const panzoomRefs = ref<(HTMLElement | null)[]>([]);
+const panzoomInstances = ref<any[]>([]);
+
+onMounted(() => {
+  // Initialize Panzoom instances when images are selected
+  watch(
+    selectedImages,
+    () => {
+      nextTick(() => {
+        // Clean up existing instances
+        panzoomInstances.value.forEach((instance) => instance.destroy());
+        panzoomInstances.value = [];
+
+        // Create new instances
+        panzoomRefs.value.forEach((el, index) => {
+          if (el instanceof HTMLElement) {
+            const panzoom = Panzoom(el, {
+              maxScale: 5,
+              minScale: 0.5,
+              contain: "outside",
+              startScale: 1,
+              disablePan: false,
+              disableZoom: false,
+              cursor: "move",
+              canvas: true,
+            });
+            panzoomInstances.value[index] = panzoom;
+          }
+        });
+      });
+    },
+    { immediate: true }
+  );
+});
+
+onBeforeUnmount(() => {
+  // Clean up Panzoom instances
+  panzoomInstances.value.forEach((instance) => instance.destroy());
+});
+
+const handleZoom = (index: number, factor: number) => {
+  const instance = panzoomInstances.value[index];
+  if (instance) {
+    instance.zoom(factor, { animate: true });
+  }
+};
+
+const resetZoom = (index: number) => {
+  const instance = panzoomInstances.value[index];
+  if (instance) {
+    instance.reset({ animate: true });
   }
 };
 
@@ -295,21 +382,17 @@ const handleDownload = async () => {
   isDownloading.value = true;
 
   try {
-    // Create a canvas element
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
     if (!ctx) throw new Error("Could not get canvas context");
 
-    // Set canvas size to match the preview
     const previewRect = previewRef.value.getBoundingClientRect();
     canvas.width = previewRect.width;
     canvas.height = previewRect.height;
 
-    // Fill background
-    ctx.fillStyle = "#f3f4f6"; // bg-gray-100
+    ctx.fillStyle = "#f3f4f6";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Calculate image dimensions based on layout
     let imageWidth, imageHeight;
 
     if (layoutStyle.value === "grid") {
@@ -321,12 +404,10 @@ const handleDownload = async () => {
       imageWidth = canvas.width / 4;
       imageHeight = canvas.height;
     } else {
-      // column
       imageWidth = canvas.width;
       imageHeight = canvas.height / 4;
     }
 
-    // Load and draw each image
     const imagePromises = selectedImages.value.map((src, index) => {
       return new Promise((resolve, reject) => {
         const img = new Image();
@@ -342,12 +423,23 @@ const handleDownload = async () => {
             x = index * imageWidth;
             y = 0;
           } else {
-            // column
             x = 0;
             y = index * imageHeight;
           }
 
-          ctx.drawImage(img, x, y, imageWidth, imageHeight);
+          // Get the Panzoom instance for this image
+          const panzoom = panzoomInstances.value[index];
+          if (panzoom) {
+            const transform = panzoom.getTransform();
+            ctx.save();
+            ctx.translate(x + imageWidth / 2, y + imageHeight / 2);
+            ctx.scale(transform.scale, transform.scale);
+            ctx.translate(-imageWidth / 2, -imageHeight / 2);
+            ctx.drawImage(img, 0, 0, imageWidth, imageHeight);
+            ctx.restore();
+          } else {
+            ctx.drawImage(img, x, y, imageWidth, imageHeight);
+          }
           resolve(null);
         };
         img.onerror = reject;
@@ -355,10 +447,8 @@ const handleDownload = async () => {
       });
     });
 
-    // Wait for all images to load and draw
     await Promise.all(imagePromises);
 
-    // Convert canvas to blob and download
     const blob = await new Promise<Blob>((resolve) => {
       canvas.toBlob((blob) => {
         if (blob) resolve(blob);
@@ -402,6 +492,12 @@ const handleSearch = async () => {
 const addSearchImage = (imageUrl: string) => {
   if (selectedImages.value.length < maxImages.value) {
     selectedImages.value.push(imageUrl);
+  }
+};
+
+const setPanzoomRef = (el: Element | null, index: number) => {
+  if (el instanceof HTMLElement) {
+    panzoomRefs.value[index] = el;
   }
 };
 </script>
