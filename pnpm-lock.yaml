@@ -48,6 +48,9 @@ importers:
       '@nuxtjs/supabase':
         specifier: ^1.5.1
         version: 1.5.1
+      '@panzoom/panzoom':
+        specifier: ^4.6.0
+        version: 4.6.0
       '@pinia/nuxt':
         specifier: ^0.11.0
         version: 0.11.0(magicast@0.3.5)(pinia@3.0.2(typescript@5.8.3)(vue@3.5.13(typescript@5.8.3)))
@@ -1110,6 +1113,9 @@ packages:
 
   '@oxc-project/types@0.68.1':
     resolution: {integrity: sha512-Q/H52+HXPPxuIHwQnVkEM8GebLnNcokkI4zQQdbxLIZdfxMGhAm9+gEqsMku3t95trN/1titHUmCM9NxbKaE2g==}
+
+  '@panzoom/panzoom@4.6.0':
+    resolution: {integrity: sha512-3KxkY1lNKFn98fW5ZFR6vV0YzsXj3I4EQDyFWSXME6/cic86eSS7VjuqIjrA3PEpySo0r5fFtlX8eYCt4JPUFQ==}
 
   '@parcel/watcher-android-arm64@2.5.1':
     resolution: {integrity: sha512-KF8+j9nNbUN8vzOFDpRMsaKBHZ/mcjEjMToVMJOhTozkDonQFFrRcfdLWn6yWKCmJKmdVxSgHiYvTCef4/qcBA==}
@@ -7375,6 +7381,8 @@ snapshots:
   '@oxc-project/types@0.61.2': {}
 
   '@oxc-project/types@0.68.1': {}
+
+  '@panzoom/panzoom@4.6.0': {}
 
   '@parcel/watcher-android-arm64@2.5.1':
     optional: true
