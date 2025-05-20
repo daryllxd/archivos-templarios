@@ -24,5 +24,24 @@
   "common": {
     "save": "Guardar cambios",
     "saving": "Guardando..."
+  },
+  "collage": {
+    "title": "Crear Collage",
+    "selectImages": "Seleccionar Imágenes",
+    "preview": "Vista Previa del Collage",
+    "maxImages": "Selecciona hasta 4 imágenes",
+    "saveCollage": "Guardar Collage",
+    "savingCollage": "Guardando...",
+    "success": "¡Collage guardado con éxito!",
+    "error": "Error al guardar el collage",
+    "gridSize": "Tamaño de la Cuadrícula",
+    "layoutStyle": "Estilo de Diseño",
+    "selectedCount": "Seleccionadas {count} de {max} imágenes",
+    "download": "Descargar Collage",
+    "downloadError": "Error al descargar el collage. Por favor, inténtalo de nuevo.",
+    "searchImages": "Buscar Imágenes",
+    "searchPlaceholder": "Buscar imágenes...",
+    "searchResults": "Resultados de la Búsqueda",
+    "defaultImages": "Imágenes Predeterminadas"
   }
 }

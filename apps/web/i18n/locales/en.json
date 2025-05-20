@@ -24,5 +24,24 @@
   "common": {
     "save": "Save Changes",
     "saving": "Saving..."
+  },
+  "collage": {
+    "title": "Create Collage",
+    "selectImages": "Select Images",
+    "preview": "Collage Preview",
+    "maxImages": "Select up to 4 images",
+    "saveCollage": "Save Collage",
+    "savingCollage": "Saving...",
+    "success": "Collage saved successfully!",
+    "error": "Error saving collage",
+    "gridSize": "Grid Size",
+    "layoutStyle": "Layout Style",
+    "selectedCount": "Selected {count} of {max} images",
+    "download": "Download Collage",
+    "downloadError": "Error downloading collage. Please try again.",
+    "searchImages": "Search Images",
+    "searchPlaceholder": "Search for images...",
+    "searchResults": "Search Results",
+    "defaultImages": "Default Images"
   }
 }
