@@ -38,6 +38,10 @@
     "layoutStyle": "Layout Style",
     "selectedCount": "Selected {count} of {max} images",
     "download": "Download Collage",
-    "downloadError": "Error downloading collage. Please try again."
+    "downloadError": "Error downloading collage. Please try again.",
+    "searchImages": "Search Images",
+    "searchPlaceholder": "Search for images...",
+    "searchResults": "Search Results",
+    "defaultImages": "Default Images"
   }
 }

@@ -38,6 +38,10 @@
     "layoutStyle": "Estilo de Diseño",
     "selectedCount": "Seleccionadas {count} de {max} imágenes",
     "download": "Descargar Collage",
-    "downloadError": "Error al descargar el collage. Por favor, inténtalo de nuevo."
+    "downloadError": "Error al descargar el collage. Por favor, inténtalo de nuevo.",
+    "searchImages": "Buscar Imágenes",
+    "searchPlaceholder": "Buscar imágenes...",
+    "searchResults": "Resultados de la Búsqueda",
+    "defaultImages": "Imágenes Predeterminadas"
   }
 }

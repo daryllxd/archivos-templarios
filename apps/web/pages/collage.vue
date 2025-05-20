@@ -72,24 +72,87 @@
           </div>
         </div>
 
-        <div class="grid grid-cols-2 gap-4">
-          <div
-            v-for="(image, index) in availableImages"
-            :key="index"
-            class="relative aspect-square cursor-pointer"
-            :class="{ 'ring-2 ring-amber-500': selectedImages.includes(image) }"
-            @click="toggleImage(image)"
-          >
-            <img
-              :src="image"
-              :alt="`Image ${index + 1}`"
-              class="w-full h-full object-cover rounded-lg"
-            />
-            <div
-              v-if="selectedImages.includes(image)"
-              class="absolute top-2 right-2 bg-amber-500 text-white rounded-full p-1"
+        <!-- Image Search -->
+        <div
+          class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm space-y-4"
+        >
+          <div>
+            <label
+              class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
             >
-              <Icon name="ph:check-bold" class="w-4 h-4" />
+              {{ t("collage.searchImages") }}
+            </label>
+            <div class="flex gap-2">
+              <input
+                v-model="searchQuery"
+                type="text"
+                class="flex-1 px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500"
+                :placeholder="t('collage.searchPlaceholder')"
+                @keyup.enter="handleSearch"
+              />
+              <button
+                class="px-4 py-2 bg-amber-500 text-white rounded-md hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
+                :disabled="isSearching"
+                @click="handleSearch"
+              >
+                <Icon
+                  v-if="isSearching"
+                  name="ph:spinner-gap-bold"
+                  class="w-5 h-5 animate-spin"
+                />
+                <Icon v-else name="ph:magnifying-glass-bold" class="w-5 h-5" />
+              </button>
+            </div>
+          </div>
+
+          <!-- Search Results -->
+          <div v-if="searchResults.length > 0" class="space-y-2">
+            <h3 class="text-sm font-medium text-gray-700 dark:text-gray-300">
+              {{ t("collage.searchResults") }}
+            </h3>
+            <div class="grid grid-cols-3 gap-2">
+              <div
+                v-for="(result, index) in searchResults"
+                :key="index"
+                class="relative aspect-square cursor-pointer group"
+                @click="addSearchImage(result.link)"
+              >
+                <img
+                  :src="result.link"
+                  :alt="result.title"
+                  class="w-full h-full object-cover rounded-lg"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Default Images -->
+        <div>
+          <h3 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            {{ t("collage.defaultImages") }}
+          </h3>
+          <div class="grid grid-cols-4 gap-2">
+            <div
+              v-for="(image, index) in availableImages"
+              :key="index"
+              class="relative aspect-square cursor-pointer"
+              :class="{
+                'ring-2 ring-amber-500': selectedImages.includes(image),
+              }"
+              @click="toggleImage(image)"
+            >
+              <img
+                :src="image"
+                :alt="`Image ${index + 1}`"
+                class="w-full h-full object-cover rounded-lg"
+              />
+              <div
+                v-if="selectedImages.includes(image)"
+                class="absolute top-1 right-1 bg-amber-500 text-white rounded-full p-1"
+              >
+                <Icon name="ph:check-bold" class="w-3 h-3" />
+              </div>
             </div>
           </div>
         </div>
@@ -173,6 +236,9 @@ import { useI18n } from "vue-i18n";
 const { t } = useI18n();
 const previewRef = ref<HTMLElement | null>(null);
 const isDownloading = ref(false);
+const isSearching = ref(false);
+const searchQuery = ref("");
+const searchResults = ref<Array<{ link: string; title: string }>>([]);
 
 const availableImages = [
   "/images/terran_marine.gif",
@@ -312,6 +378,30 @@ const handleDownload = async () => {
     alert(t("collage.downloadError"));
   } finally {
     isDownloading.value = false;
+  }
+};
+
+const handleSearch = async () => {
+  if (!searchQuery.value.trim() || isSearching.value) return;
+
+  isSearching.value = true;
+  try {
+    const response = await fetch(
+      `/api/search-images?q=${encodeURIComponent(searchQuery.value)}`
+    );
+    const data = await response.json();
+    searchResults.value = data.items || [];
+  } catch (error) {
+    console.error("Error searching images:", error);
+    searchResults.value = [];
+  } finally {
+    isSearching.value = false;
+  }
+};
+
+const addSearchImage = (imageUrl: string) => {
+  if (selectedImages.value.length < maxImages.value) {
+    selectedImages.value.push(imageUrl);
   }
 };
 </script>
