@@ -7,7 +7,7 @@
       <button
         class="px-4 py-2 bg-amber-500 text-white rounded-md hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
         :disabled="isFetching"
-        @click="refetch"
+        @click="() => refetch()"
       >
         <span v-if="isFetching">Loading...</span>
         <span v-else>Get Random Card</span>
@@ -35,12 +35,7 @@
       <div
         class="max-w-md mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 relative"
       >
-        <img
-          v-if="card.image_uris?.normal"
-          :src="card.image_uris.normal"
-          :alt="card.name"
-          class="w-full rounded mb-4"
-        />
+        <CardImage :image-url="card.image_uris?.normal" :alt-text="card.name" />
         <div
           v-if="isEnglishCovered"
           class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center"
@@ -59,11 +54,9 @@
       <div
         class="max-w-md mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 relative"
       >
-        <img
-          v-if="cardEs.image_uris?.normal"
-          :src="cardEs.image_uris.normal"
-          :alt="cardEs.name"
-          class="w-full rounded mb-4"
+        <CardImage
+          :image-url="cardEs.image_uris?.normal"
+          :alt-text="cardEs.name"
         />
         <div
           v-if="isSpanishCovered"
@@ -97,9 +90,29 @@
 <script setup lang="ts">
 import { useQuery } from "@tanstack/vue-query";
 import { computed, ref } from "vue";
+import CardImage from "~/components/magic-cards/CardImage.vue";
 import { ScryfallApiInstance } from "~/composables/scryfall";
 
-const isEnglishCovered = ref(true);
+interface CardImage {
+  normal: string;
+}
+
+interface Card {
+  name: string;
+  type_line: string;
+  oracle_text: string;
+  image_uris?: CardImage;
+  printed_name?: string;
+  printed_type_line?: string;
+  printed_text?: string;
+}
+
+interface CardResponse {
+  english: Card;
+  spanish: Card | null;
+}
+
+const isEnglishCovered = ref(false);
 const isSpanishCovered = ref(false);
 
 const toggleEnglishOverlay = () => {
@@ -110,9 +123,9 @@ const toggleSpanishOverlay = () => {
   isSpanishCovered.value = !isSpanishCovered.value;
 };
 
-const getRandomCard = async () => {
+const getRandomCard = async (): Promise<CardResponse> => {
   // 1. Fetch a random MH3 card in English
-  const english = await ScryfallApiInstance.getRandomCard("set:mh3");
+  const english = (await ScryfallApiInstance.getRandomCard("set:mh3")) as Card;
   // 2. Fetch the Spanish version by name
   const searchUrl = new URL("https://api.scryfall.com/cards/search");
   searchUrl.searchParams.set("q", `lang:es name:"${english.name}"`);
@@ -125,7 +138,6 @@ const getRandomCard = async () => {
 const { data, refetch, isFetching } = useQuery({
   queryKey: ["random-mh3-card"],
   queryFn: getRandomCard,
-  enabled: false,
 });
 
 const card = computed(() => data.value?.english);
