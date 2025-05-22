@@ -28,6 +28,19 @@
       </button>
     </div>
     <div
+      v-if="error"
+      class="max-w-[800px] mx-auto mb-4 p-4 bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-100 rounded-lg"
+    >
+      <p class="font-semibold">Error loading cards:</p>
+      <p>{{ error.message }}</p>
+      <button
+        class="mt-2 px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
+        @click="() => refetch()"
+      >
+        Try Again
+      </button>
+    </div>
+    <div
       v-if="card && cardEs"
       class="grid md:grid-cols-2 gap-4 max-w-[800px] mx-auto"
     >
@@ -92,7 +105,7 @@ import { ref } from "vue";
 import CardImage from "~/components/magic-cards/CardImage.vue";
 import { useMagicCards } from "~/composables/useMagicCards";
 
-const { card, cardEs, refetch, isFetching } = useMagicCards();
+const { card, cardEs, refetch, isFetching, error } = useMagicCards();
 
 const isEnglishCovered = ref(false);
 const isSpanishCovered = ref(false);
