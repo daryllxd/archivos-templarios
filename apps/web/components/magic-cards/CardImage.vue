@@ -3,8 +3,9 @@
     <div
       v-if="imageLoading"
       class="w-full rounded mb-4 h-[400px] bg-gray-200 dark:bg-gray-700 animate-pulse"
-    />
+    ></div>
     <img
+      v-show="!imageLoading"
       :src="imageUrl"
       :alt="altText"
       class="w-full rounded mb-4 h-[400px] object-contain"
