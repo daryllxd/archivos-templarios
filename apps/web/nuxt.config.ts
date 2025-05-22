@@ -33,6 +33,7 @@ export default defineNuxtConfig({
     "@nuxt/ui",
     "@nuxt/image",
     "@nuxtjs/supabase",
+    "@formkit/nuxt",
     "shadcn-nuxt",
     "@primevue/nuxt-module",
     "@nuxtjs/i18n",
@@ -40,6 +41,10 @@ export default defineNuxtConfig({
   ],
   ui: {
     darkMode: false,
+  },
+  formkit: {
+    // Experimental support for auto loading (see note):
+    autoImport: true,
   },
   i18n: {
     defaultLocale: "en",
