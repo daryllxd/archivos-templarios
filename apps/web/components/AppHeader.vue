@@ -70,6 +70,7 @@ const links = computed(() =>
   [
     { to: "/", text: t("home") },
     user.value ? { to: "/quizzes", text: t("quizzes") } : null,
+    { to: "/magic-quiz", text: "Magic Quiz" },
     { to: "/about", text: t("about") },
     !user.value ? { to: "/register", text: t("register") } : null,
   ].filter(Boolean)

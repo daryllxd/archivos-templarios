@@ -9,7 +9,7 @@ export default defineNuxtConfig({
     { path: "~/components", pathPrefix: false },
     { path: "~/components/ui", pathPrefix: false },
   ],
-  plugins: ["~/plugins/theme.client.ts"],
+  plugins: ["~/plugins/theme.client.ts", "~/plugins/vue-query.ts"],
   runtimeConfig: {
     public: {
       supabaseUrl: process.env.SUPABASE_URL,
