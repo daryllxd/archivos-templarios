@@ -88,29 +88,11 @@
 </template>
 
 <script setup lang="ts">
-import { useQuery } from "@tanstack/vue-query";
-import { computed, ref } from "vue";
+import { ref } from "vue";
 import CardImage from "~/components/magic-cards/CardImage.vue";
-import { ScryfallApiInstance } from "~/composables/scryfall";
+import { useMagicCards } from "~/composables/useMagicCards";
 
-interface CardImage {
-  normal: string;
-}
-
-interface Card {
-  name: string;
-  type_line: string;
-  oracle_text: string;
-  image_uris?: CardImage;
-  printed_name?: string;
-  printed_type_line?: string;
-  printed_text?: string;
-}
-
-interface CardResponse {
-  english: Card;
-  spanish: Card | null;
-}
+const { card, cardEs, refetch, isFetching } = useMagicCards();
 
 const isEnglishCovered = ref(false);
 const isSpanishCovered = ref(false);
@@ -122,24 +104,4 @@ const toggleEnglishOverlay = () => {
 const toggleSpanishOverlay = () => {
   isSpanishCovered.value = !isSpanishCovered.value;
 };
-
-const getRandomCard = async (): Promise<CardResponse> => {
-  // 1. Fetch a random MH3 card in English
-  const english = (await ScryfallApiInstance.getRandomCard("set:mh3")) as Card;
-  // 2. Fetch the Spanish version by name
-  const searchUrl = new URL("https://api.scryfall.com/cards/search");
-  searchUrl.searchParams.set("q", `lang:es name:"${english.name}"`);
-  const searchRes = await fetch(searchUrl.toString()).then((res) => res.json());
-  const spanish =
-    searchRes.data && searchRes.data.length > 0 ? searchRes.data[0] : null;
-  return { english, spanish };
-};
-
-const { data, refetch, isFetching } = useQuery({
-  queryKey: ["random-mh3-card"],
-  queryFn: getRandomCard,
-});
-
-const card = computed(() => data.value?.english);
-const cardEs = computed(() => data.value?.spanish);
 </script>
