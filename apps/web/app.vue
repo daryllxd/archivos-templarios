@@ -1,4 +1,6 @@
 <template>
+  <VueQueryDevtools />
+
   <div>
     <AppHeader />
     <main class="container mx-auto p-4">
@@ -9,6 +11,7 @@
 
 <script setup lang="ts">
 import { createClient } from "@supabase/supabase-js";
+import { VueQueryDevtools } from "@tanstack/vue-query-devtools";
 import AppHeader from "./components/AppHeader.vue";
 
 const config = useRuntimeConfig();

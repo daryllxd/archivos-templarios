@@ -48,6 +48,8 @@
     "@primevue/nuxt-module": "^4.3.4",
     "eslint": "^9.26.0",
     "typescript": "^5.8.2",
+    "@tanstack/vue-query-devtools": "^5.76.0",
+    "@vue/devtools-api": "7.7.6",
     "vite-tsconfig-paths": "^5.1.4"
   }
 }

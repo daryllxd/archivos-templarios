@@ -121,6 +121,12 @@ importers:
       '@primevue/nuxt-module':
         specifier: ^4.3.4
         version: 4.3.4(@babel/parser@7.27.2)(magicast@0.3.5)(vue@3.5.13(typescript@5.8.3))
+      '@tanstack/vue-query-devtools':
+        specifier: ^5.76.0
+        version: 5.76.0(@tanstack/vue-query@5.76.0(vue@3.5.13(typescript@5.8.3)))(vue@3.5.13(typescript@5.8.3))
+      '@vue/devtools-api':
+        specifier: 7.7.6
+        version: 7.7.6
       eslint:
         specifier: ^9.26.0
         version: 9.26.0(jiti@2.4.2)
@@ -1598,12 +1604,21 @@ packages:
   '@tanstack/query-core@5.76.0':
     resolution: {integrity: sha512-FN375hb8ctzfNAlex5gHI6+WDXTNpe0nbxp/d2YJtnP+IBM6OUm7zcaoCW6T63BawGOYZBbKC0iPvr41TteNVg==}
 
+  '@tanstack/query-devtools@5.76.0':
+    resolution: {integrity: sha512-1p92nqOBPYVqVDU0Ua5nzHenC6EGZNrLnB2OZphYw8CNA1exuvI97FVgIKON7Uug3uQqvH/QY8suUKpQo8qHNQ==}
+
   '@tanstack/table-core@8.21.3':
     resolution: {integrity: sha512-ldZXEhOBb8Is7xLs01fR3YEc3DERiz5silj8tnGkFZytt1abEvl/GhUmCE0PMLaMPTa3Jk4HbKmRlHmu+gCftg==}
     engines: {node: '>=12'}
 
   '@tanstack/virtual-core@3.13.8':
     resolution: {integrity: sha512-BT6w89Hqy7YKaWewYzmecXQzcJh6HTBbKYJIIkMaNU49DZ06LoTV3z32DWWEdUsgW6n1xTmwTLs4GtWrZC261w==}
+
+  '@tanstack/vue-query-devtools@5.76.0':
+    resolution: {integrity: sha512-5+AlC3gXDWV1SnxHOFfdUp4pL2SkypUGdDnAYOhZbubjqRrTvOtsCwqwvHJG/ohNmDayoZakjZ4dPcgbBI8oPA==}
+    peerDependencies:
+      '@tanstack/vue-query': ^5.76.0
+      vue: ^3.3.0
 
   '@tanstack/vue-query@5.76.0':
     resolution: {integrity: sha512-Ow1JPfAqjam/hH2WJj15Y+a7FT5LS/So2b4jMAI3lLKUcpIjVRLEOLQXdCYZ/29YbDrL66trwLPXjA9tYrHung==}
@@ -7825,9 +7840,17 @@ snapshots:
 
   '@tanstack/query-core@5.76.0': {}
 
+  '@tanstack/query-devtools@5.76.0': {}
+
   '@tanstack/table-core@8.21.3': {}
 
   '@tanstack/virtual-core@3.13.8': {}
+
+  '@tanstack/vue-query-devtools@5.76.0(@tanstack/vue-query@5.76.0(vue@3.5.13(typescript@5.8.3)))(vue@3.5.13(typescript@5.8.3))':
+    dependencies:
+      '@tanstack/query-devtools': 5.76.0
+      '@tanstack/vue-query': 5.76.0(vue@3.5.13(typescript@5.8.3))
+      vue: 3.5.13(typescript@5.8.3)
 
   '@tanstack/vue-query@5.76.0(vue@3.5.13(typescript@5.8.3))':
     dependencies:
