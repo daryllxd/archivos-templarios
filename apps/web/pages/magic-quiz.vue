@@ -1,8 +1,11 @@
 <template>
   <div class="container mx-auto px-4 py-8">
     <h1 class="text-3xl font-bold mb-8 text-gray-900 dark:text-white">
-      Magic: The Gathering Random MH3 Card (EN & ES)
+      Magic: The Gathering Random Card Quiz
     </h1>
+
+    <CardForm v-model="formData" @submit="handleFormSubmit" />
+
     <div class="mb-6">
       <button
         class="px-4 py-2 bg-amber-500 text-white rounded-md hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
@@ -102,13 +105,30 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
+import CardForm from "~/components/magic-cards/CardForm.vue";
 import CardImage from "~/components/magic-cards/CardImage.vue";
 import { useMagicCards } from "~/composables/useMagicCards";
 
-const { card, cardEs, refetch, isFetching, error } = useMagicCards();
+interface FormData {
+  language: string;
+  set: string;
+}
+
+const formData = ref<FormData>({
+  language: "es",
+  set: "mh3",
+});
+
+const { card, cardEs, refetch, isFetching, error, updateOptions } =
+  useMagicCards();
 
 const isEnglishCovered = ref(false);
 const isSpanishCovered = ref(false);
+
+const handleFormSubmit = (data: FormData) => {
+  updateOptions(data);
+  refetch();
+};
 
 const toggleEnglishOverlay = () => {
   isEnglishCovered.value = !isEnglishCovered.value;
