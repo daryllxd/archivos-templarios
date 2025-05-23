@@ -12,19 +12,6 @@
       />
     </div>
 
-    <div class="mb-4 flex space-x-4">
-      <Button
-        :label="isEnglishCovered ? 'Show English' : 'Hide English'"
-        icon="pi pi-eye"
-        @click="store.toggleEnglishOverlay()"
-      />
-      <Button
-        :label="isSpanishCovered ? 'Show Spanish' : 'Hide Spanish'"
-        icon="pi pi-eye"
-        @click="store.toggleSpanishOverlay()"
-      />
-    </div>
-
     <div
       v-if="error"
       class="mx-auto mb-4 p-4 bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-100 rounded-lg"
@@ -40,7 +27,6 @@
     </div>
 
     <div v-if="card && cardEs" class="grid md:grid-cols-2 gap-4 mx-auto">
-      <!-- Spanish Card -->
       <div
         class="w-full mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 relative"
       >
@@ -48,12 +34,6 @@
           :image-url="cardEs.image_uris?.normal"
           :alt-text="cardEs.name"
         />
-        <div
-          v-if="isSpanishCovered"
-          class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center"
-        >
-          <span class="text-white text-xl">Covered</span>
-        </div>
         <h2 class="text-xl font-semibold mb-2 text-gray-900 dark:text-white">
           {{ cardEs.printed_name || cardEs.name }}
         </h2>
@@ -271,7 +251,7 @@ import { isSimilarEnough } from "~/utils/levenshtein-match";
 
 const router = useRouter();
 const store = useMagicQuizStore();
-const { formData, isEnglishCovered, isSpanishCovered } = storeToRefs(store);
+const { formData } = storeToRefs(store);
 
 const { card, cardEs, refetch, isFetching, error } = useMagicCards(
   formData.value

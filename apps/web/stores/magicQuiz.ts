@@ -3,8 +3,6 @@ import type { CardOptions } from "~/composables/useMagicCards";
 
 interface MagicQuizState {
   formData: CardOptions;
-  isEnglishCovered: boolean;
-  isSpanishCovered: boolean;
 }
 
 export const useMagicQuizStore = defineStore("magicQuiz", {
@@ -13,19 +11,11 @@ export const useMagicQuizStore = defineStore("magicQuiz", {
       language: "es",
       set: "mh3",
     },
-    isEnglishCovered: true,
-    isSpanishCovered: false,
   }),
 
   actions: {
     updateFormData(data: CardOptions) {
       this.formData = data;
-    },
-    toggleEnglishOverlay() {
-      this.isEnglishCovered = !this.isEnglishCovered;
-    },
-    toggleSpanishOverlay() {
-      this.isSpanishCovered = !this.isSpanishCovered;
     },
   },
 });
