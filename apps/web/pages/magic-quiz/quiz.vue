@@ -12,15 +12,6 @@
       />
     </div>
 
-    <div class="mb-6">
-      <Button
-        label="Get Random Card"
-        icon="pi pi-refresh"
-        :loading="isFetching"
-        @click="() => refetch()"
-      />
-    </div>
-
     <div class="mb-4 flex space-x-4">
       <Button
         :label="isEnglishCovered ? 'Show English' : 'Hide English'"
@@ -98,6 +89,7 @@
                   'p-invalid': fieldStatus.cardName === 'incorrect',
                   'p-valid': fieldStatus.cardName === 'correct',
                 }"
+                @keydown.enter.prevent="checkField('cardName')"
               />
               <Button
                 icon="pi pi-check"
@@ -144,6 +136,7 @@
                   'p-invalid': fieldStatus.cardType === 'incorrect',
                   'p-valid': fieldStatus.cardType === 'correct',
                 }"
+                @keydown.enter.prevent="checkField('cardType')"
               />
               <Button
                 icon="pi pi-check"
@@ -152,9 +145,7 @@
                   !answers.cardType || fieldStatus.cardType === 'correct'
                 "
                 @click="checkField('cardType')"
-              >
-                Check
-              </Button>
+              />
             </div>
             <small
               v-if="fieldStatus.cardType === 'correct'"
@@ -193,6 +184,7 @@
                   'p-invalid': fieldStatus.cardText === 'incorrect',
                   'p-valid': fieldStatus.cardText === 'correct',
                 }"
+                @keydown.enter.prevent="checkField('cardText')"
               />
               <Button
                 icon="pi pi-check"
@@ -201,9 +193,7 @@
                   !answers.cardText || fieldStatus.cardText === 'correct'
                 "
                 @click="checkField('cardText')"
-              >
-                Check
-              </Button>
+              />
             </div>
             <small
               v-if="fieldStatus.cardText === 'correct'"
@@ -225,7 +215,13 @@
             </small>
           </div>
 
-          <div class="flex justify-end">
+          <div class="flex justify-end space-x-2">
+            <Button
+              label="Next Card"
+              icon="pi pi-refresh"
+              class="p-button-secondary"
+              @click="getNextCard"
+            />
             <Button
               label="Show All Answers"
               icon="pi pi-eye"
@@ -294,6 +290,25 @@ const fieldStatus = ref({
 } as Record<string, "unchecked" | "correct" | "incorrect">);
 
 const showAnswers = ref(false);
+
+const resetForm = () => {
+  answers.value = {
+    cardName: "",
+    cardType: "",
+    cardText: "",
+  };
+  fieldStatus.value = {
+    cardName: "unchecked",
+    cardType: "unchecked",
+    cardText: "unchecked",
+  };
+  showAnswers.value = false;
+};
+
+const getNextCard = async () => {
+  await refetch();
+  resetForm();
+};
 
 const checkField = (field: keyof typeof answers.value) => {
   if (!card.value) return;
