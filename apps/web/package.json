@@ -24,6 +24,7 @@
     "@panzoom/panzoom": "^4.6.0",
     "@pinia/nuxt": "^0.11.0",
     "@primeuix/themes": "^1.1.1",
+    "@scryfall/api-types": "1.0.0-alpha.4",
     "@supabase/supabase-js": "^2.49.4",
     "@tailwindcss/vite": "^4.1.5",
     "@tanstack/vue-query": "^5.76.0",
