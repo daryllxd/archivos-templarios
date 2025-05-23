@@ -43,6 +43,12 @@
         <p class="text-gray-500 dark:text-gray-400">
           {{ cardEs.printed_text || cardEs.oracle_text }}
         </p>
+        <p
+          v-if="cardEs.flavor_text"
+          class="text-gray-500 dark:text-gray-400 italic"
+        >
+          {{ cardEs.flavor_text }}
+        </p>
       </div>
 
       <!-- Answer Form -->
@@ -195,6 +201,54 @@
             </small>
           </div>
 
+          <div v-if="card?.flavor_text" class="field">
+            <label
+              for="flavorText"
+              class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+            >
+              Flavor Text
+            </label>
+            <div class="flex gap-2">
+              <Textarea
+                id="flavorText"
+                v-model="answers.flavorText"
+                rows="3"
+                class="w-full"
+                :class="{
+                  'p-invalid': fieldStatus.flavorText === 'incorrect',
+                  'p-valid': fieldStatus.flavorText === 'correct',
+                }"
+                @keydown.enter.prevent="checkField('flavorText')"
+              />
+              <Button
+                icon="pi pi-check"
+                class="p-button-success flex-shrink-0"
+                :disabled="
+                  !answers.flavorText || fieldStatus.flavorText === 'correct'
+                "
+                @click="checkField('flavorText')"
+              />
+            </div>
+            <small
+              v-if="fieldStatus.flavorText === 'correct'"
+              class="text-green-500"
+            >
+              Correct!
+              {{
+                answers.flavorText.toLowerCase().trim() !==
+                card?.flavor_text?.toLowerCase().trim()
+                  ? `(Exact answer: ${card?.flavor_text})`
+                  : ""
+              }}
+            </small>
+            <small
+              v-else-if="fieldStatus.flavorText === 'incorrect'"
+              class="text-red-500"
+            >
+              Try again. Correct answer: {{ card?.flavor_text }}
+            </small>
+          </div>
+
           <div class="flex justify-end space-x-2">
             <Button
               label="Next Card"
@@ -261,12 +315,14 @@ const answers = ref({
   cardName: "",
   cardType: "",
   cardText: "",
+  flavorText: "",
 });
 
 const fieldStatus = ref({
   cardName: "unchecked",
   cardType: "unchecked",
   cardText: "unchecked",
+  flavorText: "unchecked",
 } as Record<string, "unchecked" | "correct" | "incorrect">);
 
 const showAnswers = ref(false);
@@ -276,11 +332,13 @@ const resetForm = () => {
     cardName: "",
     cardType: "",
     cardText: "",
+    flavorText: "",
   };
   fieldStatus.value = {
     cardName: "unchecked",
     cardType: "unchecked",
     cardText: "unchecked",
+    flavorText: "unchecked",
   };
   showAnswers.value = false;
 };
@@ -299,12 +357,14 @@ const checkField = (field: keyof typeof answers.value) => {
         ? "name"
         : field === "cardType"
           ? "type_line"
-          : "oracle_text"
+          : field === "cardText"
+            ? "oracle_text"
+            : "flavor_text"
     ];
 
   const { isMatch: isCorrect } = isSimilarEnough(
     answers.value[field],
-    correctAnswer
+    correctAnswer || ""
   );
   fieldStatus.value[field] = isCorrect ? "correct" : "incorrect";
 
