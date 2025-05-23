@@ -12,19 +12,6 @@
       />
     </div>
 
-    <div class="mb-4 flex space-x-4">
-      <Button
-        :label="isEnglishCovered ? 'Show English' : 'Hide English'"
-        icon="pi pi-eye"
-        @click="store.toggleEnglishOverlay()"
-      />
-      <Button
-        :label="isSpanishCovered ? 'Show Spanish' : 'Hide Spanish'"
-        icon="pi pi-eye"
-        @click="store.toggleSpanishOverlay()"
-      />
-    </div>
-
     <div
       v-if="error"
       class="mx-auto mb-4 p-4 bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-100 rounded-lg"
@@ -40,7 +27,6 @@
     </div>
 
     <div v-if="card && cardEs" class="grid md:grid-cols-2 gap-4 mx-auto">
-      <!-- Spanish Card -->
       <div
         class="w-full mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 relative"
       >
@@ -48,12 +34,6 @@
           :image-url="cardEs.image_uris?.normal"
           :alt-text="cardEs.name"
         />
-        <div
-          v-if="isSpanishCovered"
-          class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center"
-        >
-          <span class="text-white text-xl">Covered</span>
-        </div>
         <h2 class="text-xl font-semibold mb-2 text-gray-900 dark:text-white">
           {{ cardEs.printed_name || cardEs.name }}
         </h2>
@@ -62,6 +42,12 @@
         </p>
         <p class="text-gray-500 dark:text-gray-400">
           {{ cardEs.printed_text || cardEs.oracle_text }}
+        </p>
+        <p
+          v-if="cardEs.flavor_text"
+          class="text-gray-500 dark:text-gray-400 italic"
+        >
+          {{ cardEs.flavor_text }}
         </p>
       </div>
 
@@ -215,6 +201,54 @@
             </small>
           </div>
 
+          <div v-if="card?.flavor_text" class="field">
+            <label
+              for="flavorText"
+              class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+            >
+              Flavor Text
+            </label>
+            <div class="flex gap-2">
+              <Textarea
+                id="flavorText"
+                v-model="answers.flavorText"
+                rows="3"
+                class="w-full"
+                :class="{
+                  'p-invalid': fieldStatus.flavorText === 'incorrect',
+                  'p-valid': fieldStatus.flavorText === 'correct',
+                }"
+                @keydown.enter.prevent="checkField('flavorText')"
+              />
+              <Button
+                icon="pi pi-check"
+                class="p-button-success flex-shrink-0"
+                :disabled="
+                  !answers.flavorText || fieldStatus.flavorText === 'correct'
+                "
+                @click="checkField('flavorText')"
+              />
+            </div>
+            <small
+              v-if="fieldStatus.flavorText === 'correct'"
+              class="text-green-500"
+            >
+              Correct!
+              {{
+                answers.flavorText.toLowerCase().trim() !==
+                card?.flavor_text?.toLowerCase().trim()
+                  ? `(Exact answer: ${card?.flavor_text})`
+                  : ""
+              }}
+            </small>
+            <small
+              v-else-if="fieldStatus.flavorText === 'incorrect'"
+              class="text-red-500"
+            >
+              Try again. Correct answer: {{ card?.flavor_text }}
+            </small>
+          </div>
+
           <div class="flex justify-end space-x-2">
             <Button
               label="Next Card"
@@ -271,7 +305,7 @@ import { isSimilarEnough } from "~/utils/levenshtein-match";
 
 const router = useRouter();
 const store = useMagicQuizStore();
-const { formData, isEnglishCovered, isSpanishCovered } = storeToRefs(store);
+const { formData } = storeToRefs(store);
 
 const { card, cardEs, refetch, isFetching, error } = useMagicCards(
   formData.value
@@ -281,12 +315,14 @@ const answers = ref({
   cardName: "",
   cardType: "",
   cardText: "",
+  flavorText: "",
 });
 
 const fieldStatus = ref({
   cardName: "unchecked",
   cardType: "unchecked",
   cardText: "unchecked",
+  flavorText: "unchecked",
 } as Record<string, "unchecked" | "correct" | "incorrect">);
 
 const showAnswers = ref(false);
@@ -296,11 +332,13 @@ const resetForm = () => {
     cardName: "",
     cardType: "",
     cardText: "",
+    flavorText: "",
   };
   fieldStatus.value = {
     cardName: "unchecked",
     cardType: "unchecked",
     cardText: "unchecked",
+    flavorText: "unchecked",
   };
   showAnswers.value = false;
 };
@@ -319,12 +357,14 @@ const checkField = (field: keyof typeof answers.value) => {
         ? "name"
         : field === "cardType"
           ? "type_line"
-          : "oracle_text"
+          : field === "cardText"
+            ? "oracle_text"
+            : "flavor_text"
     ];
 
   const { isMatch: isCorrect } = isSimilarEnough(
     answers.value[field],
-    correctAnswer
+    correctAnswer || ""
   );
   fieldStatus.value[field] = isCorrect ? "correct" : "incorrect";
 

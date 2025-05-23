@@ -60,6 +60,9 @@ importers:
       '@primeuix/themes':
         specifier: ^1.1.1
         version: 1.1.1
+      '@scryfall/api-types':
+        specifier: 1.0.0-alpha.4
+        version: 1.0.0-alpha.4
       '@supabase/supabase-js':
         specifier: ^2.49.4
         version: 2.49.4
@@ -1508,6 +1511,9 @@ packages:
     resolution: {integrity: sha512-bwspbWB04XJpeElvsp+DCylKfF4trJDa2Y9Go8O6A7YLX2LIKGcNK/CYImJN6ZP4DcuOHB4Utl3iCbnR62DudA==}
     cpu: [x64]
     os: [win32]
+
+  '@scryfall/api-types@1.0.0-alpha.4':
+    resolution: {integrity: sha512-uxoJPA5r0va3xo1h5Su+0J8ptG1BS7+Uw+67sV7NTBIhR7Ly9cYrRv0un4Q3Z/h+D8jjTWNwablUbDG6zULcVA==}
 
   '@sindresorhus/is@7.0.1':
     resolution: {integrity: sha512-QWLl2P+rsCJeofkDNIT3WFmb6NrRud1SUYW8dIhXK/46XFV8Q/g7Bsvib0Askb0reRLe+WYPeeE+l5cH7SlkuQ==}
@@ -7851,6 +7857,8 @@ snapshots:
 
   '@rollup/rollup-win32-x64-msvc@4.40.2':
     optional: true
+
+  '@scryfall/api-types@1.0.0-alpha.4': {}
 
   '@sindresorhus/is@7.0.1': {}
 
