@@ -54,3 +54,6 @@ supabase/.temp
 supabase/.output
 supabase/.env
 supabase/docker
+
+# Obsidian
+.obsidian/
