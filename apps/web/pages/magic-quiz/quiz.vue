@@ -52,26 +52,6 @@
       v-if="card && cardEs"
       class="grid md:grid-cols-2 gap-4 max-w-[800px] mx-auto"
     >
-      <!-- English Card -->
-      <div
-        class="max-w-md mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 relative"
-      >
-        <CardImage :image-url="card.image_uris?.normal" :alt-text="card.name" />
-        <div
-          v-if="isEnglishCovered"
-          class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center"
-        >
-          <span class="text-white text-xl">Covered</span>
-        </div>
-        <h2 class="text-xl font-semibold mb-2 text-gray-900 dark:text-white">
-          {{ card.name }}
-        </h2>
-        <p class="text-gray-700 dark:text-gray-300 mb-2">
-          {{ card.type_line }}
-        </p>
-        <p class="text-gray-500 dark:text-gray-400">{{ card.oracle_text }}</p>
-      </div>
-
       <!-- Spanish Card -->
       <div
         class="max-w-md mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 relative"
@@ -96,6 +76,95 @@
           {{ cardEs.printed_text || cardEs.oracle_text }}
         </p>
       </div>
+
+      <!-- Answer Form -->
+      <div
+        class="max-w-md mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6"
+      >
+        <h2 class="text-xl font-semibold mb-4 text-gray-900 dark:text-white">
+          Your Answer
+        </h2>
+        <div class="space-y-4">
+          <div class="field">
+            <label
+              for="cardName"
+              class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+            >
+              Card Name
+            </label>
+            <InputText
+              id="cardName"
+              v-model="answers.cardName"
+              class="w-full"
+              :class="{
+                'p-invalid': showAnswers && answers.cardName !== card.name,
+              }"
+            />
+          </div>
+          <div class="field">
+            <label
+              for="cardType"
+              class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+            >
+              Card Type
+            </label>
+            <InputText
+              id="cardType"
+              v-model="answers.cardType"
+              class="w-full"
+              :class="{
+                'p-invalid': showAnswers && answers.cardType !== card.type_line,
+              }"
+            />
+          </div>
+          <div class="field">
+            <label
+              for="cardText"
+              class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+            >
+              Card Text
+            </label>
+            <Textarea
+              id="cardText"
+              v-model="answers.cardText"
+              rows="4"
+              class="w-full"
+              :class="{
+                'p-invalid':
+                  showAnswers && answers.cardText !== card.oracle_text,
+              }"
+            />
+          </div>
+          <div class="flex space-x-2">
+            <Button
+              label="Check Answers"
+              icon="pi pi-check"
+              @click="checkAnswers"
+            />
+            <Button
+              label="Show Answers"
+              icon="pi pi-eye"
+              class="p-button-secondary"
+              @click="showAnswers = true"
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- English Card (Hidden by default) -->
+      <div
+        v-if="showAnswers"
+        class="max-w-md mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 relative col-span-2"
+      >
+        <CardImage :image-url="card.image_uris?.normal" :alt-text="card.name" />
+        <h2 class="text-xl font-semibold mb-2 text-gray-900 dark:text-white">
+          {{ card.name }}
+        </h2>
+        <p class="text-gray-700 dark:text-gray-300 mb-2">
+          {{ card.type_line }}
+        </p>
+        <p class="text-gray-500 dark:text-gray-400">{{ card.oracle_text }}</p>
+      </div>
     </div>
 
     <div
@@ -112,6 +181,7 @@
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
+import { ref } from "vue";
 import { useRouter } from "vue-router";
 import CardImage from "~/components/magic-cards/CardImage.vue";
 import { useMagicCards } from "~/composables/useMagicCards";
@@ -124,4 +194,26 @@ const { formData, isEnglishCovered, isSpanishCovered } = storeToRefs(store);
 const { card, cardEs, refetch, isFetching, error } = useMagicCards(
   formData.value
 );
+
+const answers = ref({
+  cardName: "",
+  cardType: "",
+  cardText: "",
+});
+
+const showAnswers = ref(false);
+
+const checkAnswers = () => {
+  if (!card.value) return;
+
+  const isCorrect =
+    answers.value.cardName === card.value.name &&
+    answers.value.cardType === card.value.type_line &&
+    answers.value.cardText === card.value.oracle_text;
+
+  if (isCorrect) {
+    // You could add a success message or animation here
+    showAnswers.value = true;
+  }
+};
 </script>
