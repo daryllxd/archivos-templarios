@@ -13,7 +13,7 @@ export const useMagicQuizStore = defineStore("magicQuiz", {
       language: "es",
       set: "mh3",
     },
-    isEnglishCovered: false,
+    isEnglishCovered: true,
     isSpanishCovered: false,
   }),
 
