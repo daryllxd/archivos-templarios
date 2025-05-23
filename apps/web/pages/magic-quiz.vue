@@ -104,29 +104,33 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import CardForm from "~/components/magic-cards/CardForm.vue";
 import CardImage from "~/components/magic-cards/CardImage.vue";
-import { useMagicCards } from "~/composables/useMagicCards";
+import { useMagicCards, type CardOptions } from "~/composables/useMagicCards";
 
-interface FormData {
-  language: string;
-  set: string;
-}
-
-const formData = ref<FormData>({
+const formData = ref<CardOptions>({
   language: "es",
   set: "mh3",
 });
 
 const { card, cardEs, refetch, isFetching, error, updateOptions } =
-  useMagicCards();
+  useMagicCards(formData.value);
+
+// Watch for form data changes and update the options
+watch(
+  formData,
+  (newValue) => {
+    updateOptions(newValue);
+  },
+  { deep: true }
+);
 
 const isEnglishCovered = ref(false);
 const isSpanishCovered = ref(false);
 
-const handleFormSubmit = (data: FormData) => {
-  updateOptions(data);
+const handleFormSubmit = (data: CardOptions) => {
+  formData.value = data;
   refetch();
 };
 

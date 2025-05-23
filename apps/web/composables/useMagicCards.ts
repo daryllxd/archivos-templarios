@@ -21,16 +21,15 @@ interface CardResponse {
   spanish: Card | null;
 }
 
-interface CardOptions {
+export interface CardOptions {
   language: string;
   set: string;
 }
 
-export const useMagicCards = () => {
-  const options = ref<CardOptions>({
-    language: "es",
-    set: "mh3",
-  });
+export const useMagicCards = (
+  initialOptions: CardOptions = { language: "es", set: "mh3" }
+) => {
+  const options = ref<CardOptions>(initialOptions);
 
   const getRandomCard = async (): Promise<CardResponse> => {
     try {
@@ -100,5 +99,6 @@ export const useMagicCards = () => {
     isFetching,
     error,
     updateOptions,
+    options: computed(() => options.value),
   };
 };
