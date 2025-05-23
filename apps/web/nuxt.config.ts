@@ -20,7 +20,7 @@ export default defineNuxtConfig({
   vite: {
     plugins: [tsconfigPaths(), tailwindcss()],
   },
-  css: ["~/assets/css/main.css"],
+  css: ["~/assets/css/main.css", "primeicons/primeicons.css"],
   supabase: {
     redirect: false,
   },
@@ -68,9 +68,10 @@ export default defineNuxtConfig({
       theme: {
         preset: Aura,
       },
+      ripple: true,
     },
     components: {
-      include: ["Dropdown", "ToggleSwitch", "InputText", "Textarea"],
+      include: ["Dropdown", "ToggleSwitch", "InputText", "Textarea", "Button"],
     },
   },
 });

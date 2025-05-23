@@ -36,7 +36,7 @@
 
     <div
       v-if="error"
-      class="max-w-[800px] mx-auto mb-4 p-4 bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-100 rounded-lg"
+      class="mx-auto mb-4 p-4 bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-100 rounded-lg"
     >
       <p class="font-semibold">Error loading cards:</p>
       <p>{{ error.message }}</p>
@@ -48,13 +48,10 @@
       />
     </div>
 
-    <div
-      v-if="card && cardEs"
-      class="grid md:grid-cols-2 gap-4 max-w-[800px] mx-auto"
-    >
+    <div v-if="card && cardEs" class="grid md:grid-cols-2 gap-4 mx-auto">
       <!-- Spanish Card -->
       <div
-        class="max-w-md mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 relative"
+        class="w-full mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 relative"
       >
         <CardImage
           :image-url="cardEs.image_uris?.normal"
@@ -79,7 +76,7 @@
 
       <!-- Answer Form -->
       <div
-        class="max-w-md mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6"
+        class="w-full mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6"
       >
         <h2 class="text-xl font-semibold mb-4 text-gray-900 dark:text-white">
           Your Answer
@@ -92,15 +89,39 @@
             >
               Card Name
             </label>
-            <InputText
-              id="cardName"
-              v-model="answers.cardName"
-              class="w-full"
-              :class="{
-                'p-invalid': showAnswers && answers.cardName !== card.name,
-              }"
-            />
+            <div class="flex gap-2">
+              <InputText
+                id="cardName"
+                v-model="answers.cardName"
+                class="w-full"
+                :class="{
+                  'p-invalid': fieldStatus.cardName === 'incorrect',
+                  'p-valid': fieldStatus.cardName === 'correct',
+                }"
+              />
+              <Button
+                icon="pi pi-check"
+                class="p-button-success flex-shrink-0"
+                :disabled="
+                  !answers.cardName || fieldStatus.cardName === 'correct'
+                "
+                @click="checkField('cardName')"
+              />
+            </div>
+            <small
+              v-if="fieldStatus.cardName === 'correct'"
+              class="text-green-500"
+            >
+              Correct!
+            </small>
+            <small
+              v-else-if="fieldStatus.cardName === 'incorrect'"
+              class="text-red-500"
+            >
+              Try again
+            </small>
           </div>
+
           <div class="field">
             <label
               for="cardType"
@@ -108,15 +129,41 @@
             >
               Card Type
             </label>
-            <InputText
-              id="cardType"
-              v-model="answers.cardType"
-              class="w-full"
-              :class="{
-                'p-invalid': showAnswers && answers.cardType !== card.type_line,
-              }"
-            />
+            <div class="flex gap-2">
+              <InputText
+                id="cardType"
+                v-model="answers.cardType"
+                class="w-full"
+                :class="{
+                  'p-invalid': fieldStatus.cardType === 'incorrect',
+                  'p-valid': fieldStatus.cardType === 'correct',
+                }"
+              />
+              <Button
+                icon="pi pi-check"
+                class="p-button-success flex-shrink-0"
+                :disabled="
+                  !answers.cardType || fieldStatus.cardType === 'correct'
+                "
+                @click="checkField('cardType')"
+              >
+                Check
+              </Button>
+            </div>
+            <small
+              v-if="fieldStatus.cardType === 'correct'"
+              class="text-green-500"
+            >
+              Correct!
+            </small>
+            <small
+              v-else-if="fieldStatus.cardType === 'incorrect'"
+              class="text-red-500"
+            >
+              Try again
+            </small>
           </div>
+
           <div class="field">
             <label
               for="cardText"
@@ -124,25 +171,45 @@
             >
               Card Text
             </label>
-            <Textarea
-              id="cardText"
-              v-model="answers.cardText"
-              rows="4"
-              class="w-full"
-              :class="{
-                'p-invalid':
-                  showAnswers && answers.cardText !== card.oracle_text,
-              }"
-            />
+            <div class="flex gap-2">
+              <Textarea
+                id="cardText"
+                v-model="answers.cardText"
+                rows="4"
+                class="w-full"
+                :class="{
+                  'p-invalid': fieldStatus.cardText === 'incorrect',
+                  'p-valid': fieldStatus.cardText === 'correct',
+                }"
+              />
+              <Button
+                icon="pi pi-check"
+                class="p-button-success flex-shrink-0"
+                :disabled="
+                  !answers.cardText || fieldStatus.cardText === 'correct'
+                "
+                @click="checkField('cardText')"
+              >
+                Check
+              </Button>
+            </div>
+            <small
+              v-if="fieldStatus.cardText === 'correct'"
+              class="text-green-500"
+            >
+              Correct!
+            </small>
+            <small
+              v-else-if="fieldStatus.cardText === 'incorrect'"
+              class="text-red-500"
+            >
+              Try again
+            </small>
           </div>
-          <div class="flex space-x-2">
+
+          <div class="flex justify-end">
             <Button
-              label="Check Answers"
-              icon="pi pi-check"
-              @click="checkAnswers"
-            />
-            <Button
-              label="Show Answers"
+              label="Show All Answers"
               icon="pi pi-eye"
               class="p-button-secondary"
               @click="showAnswers = true"
@@ -201,18 +268,32 @@ const answers = ref({
   cardText: "",
 });
 
+const fieldStatus = ref({
+  cardName: "unchecked",
+  cardType: "unchecked",
+  cardText: "unchecked",
+} as Record<string, "unchecked" | "correct" | "incorrect">);
+
 const showAnswers = ref(false);
 
-const checkAnswers = () => {
+const checkField = (field: keyof typeof answers.value) => {
   if (!card.value) return;
 
   const isCorrect =
-    answers.value.cardName === card.value.name &&
-    answers.value.cardType === card.value.type_line &&
-    answers.value.cardText === card.value.oracle_text;
+    answers.value[field] ===
+    card.value[
+      field === "cardName"
+        ? "name"
+        : field === "cardType"
+          ? "type_line"
+          : "oracle_text"
+    ];
+  fieldStatus.value[field] = isCorrect ? "correct" : "incorrect";
 
-  if (isCorrect) {
-    // You could add a success message or animation here
+  // If all fields are correct, show the answers
+  if (
+    Object.values(fieldStatus.value).every((status) => status === "correct")
+  ) {
     showAnswers.value = true;
   }
 };
