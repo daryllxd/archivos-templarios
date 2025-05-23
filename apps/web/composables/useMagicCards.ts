@@ -1,3 +1,4 @@
+import { useState } from "#app";
 import { useQuery } from "@tanstack/vue-query";
 import { computed, ref } from "vue";
 import { ScryfallApiInstance } from "./scryfall";
@@ -26,17 +27,64 @@ export interface CardOptions {
   set: string;
 }
 
+// Debug flags
+const DEBUG_FORCE_CARD = true; // Set to true to always return Deep Analysis
+const DEBUG_CACHE_RESPONSES = true; // Set to true to cache responses
+
+// Debug functions
+export const debugMagicCards = {
+  getCache: () => {
+    return useState<Record<string, CardResponse>>("magic-cards-cache").value;
+  },
+  clearCache: () => {
+    useState<Record<string, CardResponse>>("magic-cards-cache").value = {};
+  },
+  setCacheEntry: (key: string, value: CardResponse) => {
+    useState<Record<string, CardResponse>>("magic-cards-cache").value[key] =
+      value;
+  },
+  getCacheEntry: (key: string) => {
+    return useState<Record<string, CardResponse>>("magic-cards-cache").value[
+      key
+    ];
+  },
+};
+
 export const useMagicCards = (
   initialOptions: CardOptions = { language: "es", set: "mh3" }
 ) => {
   const options = ref<CardOptions>(initialOptions);
 
+  // Use Nuxt's useState for persistent cache
+  const responseCache = useState<Record<string, CardResponse>>(
+    "magic-cards-cache",
+    () => ({})
+  );
+
   const getRandomCard = async (): Promise<CardResponse> => {
     try {
-      // 1. Fetch a random card in English from the selected set
-      const english = (await ScryfallApiInstance.getRandomCard(
-        `set:${options.value.set}`
-      )) as Card;
+      // Check cache first if enabled
+      const cacheKey = `${options.value.language}-${options.value.set}`;
+      if (DEBUG_CACHE_RESPONSES && responseCache.value[cacheKey]) {
+        console.log("Using cached response for:", cacheKey);
+        return responseCache.value[cacheKey];
+      }
+
+      let english: Card;
+
+      if (DEBUG_FORCE_CARD) {
+        // Force Deep Analysis for debugging
+        const searchUrl = new URL("https://api.scryfall.com/cards/search");
+        searchUrl.searchParams.set("q", 'name:"Deep Analysis"');
+        const response = await fetch(searchUrl.toString());
+        const data = await response.json();
+        english = data.data[0];
+      } else {
+        // Normal random card fetch
+        english = (await ScryfallApiInstance.getRandomCard(
+          `set:${options.value.set}`
+        )) as Card;
+      }
 
       if (!english) {
         throw new Error("Failed to fetch English card");
@@ -72,7 +120,15 @@ export const useMagicCards = (
         );
       }
 
-      return { english, spanish: translated };
+      const response = { english, spanish: translated };
+
+      // Cache the response if enabled
+      if (DEBUG_CACHE_RESPONSES) {
+        console.log("Caching response for:", cacheKey);
+        responseCache.value[cacheKey] = response;
+      }
+
+      return response;
     } catch (error) {
       console.error("Error fetching cards:", error);
       throw error;
