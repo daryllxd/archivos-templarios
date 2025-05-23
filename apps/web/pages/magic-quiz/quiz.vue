@@ -113,12 +113,18 @@
               class="text-green-500"
             >
               Correct!
+              {{
+                answers.cardName.toLowerCase().trim() !==
+                card?.name.toLowerCase().trim()
+                  ? `(Exact answer: ${card?.name})`
+                  : ""
+              }}
             </small>
             <small
               v-else-if="fieldStatus.cardName === 'incorrect'"
               class="text-red-500"
             >
-              Try again
+              Try again. Correct answer: {{ card?.name }}
             </small>
           </div>
 
@@ -155,12 +161,18 @@
               class="text-green-500"
             >
               Correct!
+              {{
+                answers.cardType.toLowerCase().trim() !==
+                card?.type_line.toLowerCase().trim()
+                  ? `(Exact answer: ${card?.type_line})`
+                  : ""
+              }}
             </small>
             <small
               v-else-if="fieldStatus.cardType === 'incorrect'"
               class="text-red-500"
             >
-              Try again
+              Try again. Correct answer: {{ card?.type_line }}
             </small>
           </div>
 
@@ -198,12 +210,18 @@
               class="text-green-500"
             >
               Correct!
+              {{
+                answers.cardText.toLowerCase().trim() !==
+                card?.oracle_text.toLowerCase().trim()
+                  ? `(Exact answer: ${card?.oracle_text})`
+                  : ""
+              }}
             </small>
             <small
               v-else-if="fieldStatus.cardText === 'incorrect'"
               class="text-red-500"
             >
-              Try again
+              Try again. Correct answer: {{ card?.oracle_text }}
             </small>
           </div>
 
@@ -253,6 +271,7 @@ import { useRouter } from "vue-router";
 import CardImage from "~/components/magic-cards/CardImage.vue";
 import { useMagicCards } from "~/composables/useMagicCards";
 import { useMagicQuizStore } from "~/stores/magicQuiz";
+import { isSimilarEnough } from "~/utils/levenshtein-match";
 
 const router = useRouter();
 const store = useMagicQuizStore();
@@ -279,8 +298,7 @@ const showAnswers = ref(false);
 const checkField = (field: keyof typeof answers.value) => {
   if (!card.value) return;
 
-  const isCorrect =
-    answers.value[field] ===
+  const correctAnswer =
     card.value[
       field === "cardName"
         ? "name"
@@ -288,6 +306,11 @@ const checkField = (field: keyof typeof answers.value) => {
           ? "type_line"
           : "oracle_text"
     ];
+
+  const { isMatch: isCorrect } = isSimilarEnough(
+    answers.value[field],
+    correctAnswer
+  );
   fieldStatus.value[field] = isCorrect ? "correct" : "incorrect";
 
   // If all fields are correct, show the answers
