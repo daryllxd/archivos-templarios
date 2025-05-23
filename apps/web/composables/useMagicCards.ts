@@ -1,25 +1,13 @@
 import { useState } from "#app";
+import type { ScryfallCard } from "@scryfall/api-types";
 import { useQuery } from "@tanstack/vue-query";
 import { computed, ref } from "vue";
 import { ScryfallApiInstance } from "./scryfall";
 
-interface CardImage {
-  normal: string;
-}
-
-interface Card {
-  name: string;
-  type_line: string;
-  oracle_text: string;
-  image_uris?: CardImage;
-  printed_name?: string;
-  printed_type_line?: string;
-  printed_text?: string;
-}
-
+// We are using Normal but caution, the app can break with the double faced cards
 interface CardResponse {
-  english: Card;
-  spanish: Card | null;
+  english: ScryfallCard.Normal | null;
+  spanish: ScryfallCard.Normal | null;
 }
 
 export interface CardOptions {
@@ -70,20 +58,20 @@ export const useMagicCards = (
         return responseCache.value[cacheKey];
       }
 
-      let english: Card;
+      let english: ScryfallCard.Normal | null = null;
 
       if (DEBUG_FORCE_CARD) {
         // Force Deep Analysis for debugging
         const searchUrl = new URL("https://api.scryfall.com/cards/search");
-        searchUrl.searchParams.set("q", 'name:"Deep Analysis"');
+        searchUrl.searchParams.set("q", 'name:"Wing It"');
         const response = await fetch(searchUrl.toString());
         const data = await response.json();
-        english = data.data[0];
+        english = data.data[0] as ScryfallCard.Normal;
       } else {
         // Normal random card fetch
         english = (await ScryfallApiInstance.getRandomCard(
           `set:${options.value.set}`
-        )) as Card;
+        )) as ScryfallCard.Normal;
       }
 
       if (!english) {
@@ -109,7 +97,9 @@ export const useMagicCards = (
       });
 
       const translated =
-        searchRes.data && searchRes.data.length > 0 ? searchRes.data[0] : null;
+        searchRes.data && searchRes.data.length > 0
+          ? (searchRes.data[0] as ScryfallCard.Normal)
+          : null;
 
       if (translated) {
         console.log(`Fetched ${options.value.language} card:`, translated.name);
