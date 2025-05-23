@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/vue-query";
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { ScryfallApiInstance } from "./scryfall";
 
 interface CardImage {
@@ -21,12 +21,21 @@ interface CardResponse {
   spanish: Card | null;
 }
 
-export const useMagicCards = () => {
+export interface CardOptions {
+  language: string;
+  set: string;
+}
+
+export const useMagicCards = (
+  initialOptions: CardOptions = { language: "es", set: "mh3" }
+) => {
+  const options = ref<CardOptions>(initialOptions);
+
   const getRandomCard = async (): Promise<CardResponse> => {
     try {
-      // 1. Fetch a random MH3 card in English
+      // 1. Fetch a random card in English from the selected set
       const english = (await ScryfallApiInstance.getRandomCard(
-        "set:mh3"
+        `set:${options.value.set}`
       )) as Card;
 
       if (!english) {
@@ -35,41 +44,53 @@ export const useMagicCards = () => {
 
       console.log("Fetched English card:", english.name);
 
-      // 2. Fetch the Spanish version by name
+      // 2. Fetch the translated version by name
       const searchUrl = new URL("https://api.scryfall.com/cards/search");
-      searchUrl.searchParams.set("q", `lang:es name:"${english.name}"`);
+      searchUrl.searchParams.set(
+        "q",
+        `lang:${options.value.language} name:"${english.name}"`
+      );
 
       const searchRes = await fetch(searchUrl.toString()).then(async (res) => {
         if (!res.ok) {
-          throw new Error(`Failed to fetch Spanish card: ${res.statusText}`);
+          throw new Error(
+            `Failed to fetch ${options.value.language} card: ${res.statusText}`
+          );
         }
         return res.json();
       });
 
-      const spanish =
+      const translated =
         searchRes.data && searchRes.data.length > 0 ? searchRes.data[0] : null;
 
-      if (spanish) {
-        console.log("Fetched Spanish card:", spanish.name);
+      if (translated) {
+        console.log(`Fetched ${options.value.language} card:`, translated.name);
       } else {
-        console.warn("No Spanish translation found for:", english.name);
+        console.warn(
+          `No ${options.value.language} translation found for:`,
+          english.name
+        );
       }
 
-      return { english, spanish };
+      return { english, spanish: translated };
     } catch (error) {
       console.error("Error fetching cards:", error);
-      throw error; // Re-throw to let Vue Query handle it
+      throw error;
     }
   };
 
   const { data, refetch, isFetching, error } = useQuery({
-    queryKey: ["random-mh3-card"],
+    queryKey: ["random-card", options],
     queryFn: getRandomCard,
-    retry: 1, // Only retry once on failure
+    retry: 1,
   });
 
   const card = computed(() => data.value?.english);
   const cardEs = computed(() => data.value?.spanish);
+
+  const updateOptions = (newOptions: CardOptions) => {
+    options.value = newOptions;
+  };
 
   return {
     card,
@@ -77,5 +98,7 @@ export const useMagicCards = () => {
     refetch,
     isFetching,
     error,
+    updateOptions,
+    options: computed(() => options.value),
   };
 };
