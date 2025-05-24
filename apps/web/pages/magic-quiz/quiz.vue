@@ -27,29 +27,7 @@
     </div>
 
     <div v-if="card && cardEs" class="grid md:grid-cols-2 gap-4 mx-auto">
-      <div
-        class="w-full mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 relative"
-      >
-        <CardImage
-          :image-url="cardEs.image_uris?.normal"
-          :alt-text="cardEs.name"
-        />
-        <h2 class="text-xl font-semibold mb-2 text-gray-900 dark:text-white">
-          {{ cardEs.printed_name || cardEs.name }}
-        </h2>
-        <p class="text-gray-700 dark:text-gray-300 mb-2">
-          {{ cardEs.printed_type_line || cardEs.type_line }}
-        </p>
-        <p class="text-gray-500 dark:text-gray-400">
-          {{ cardEs.printed_text || cardEs.oracle_text }}
-        </p>
-        <p
-          v-if="cardEs.flavor_text"
-          class="text-gray-500 dark:text-gray-400 italic"
-        >
-          {{ cardEs.flavor_text }}
-        </p>
-      </div>
+      <CardDisplay :card="cardEs" />
 
       <!-- Answer Form -->
       <div
@@ -271,14 +249,7 @@
         v-if="showAnswers"
         class="max-w-md mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 relative col-span-2"
       >
-        <CardImage :image-url="card.image_uris?.normal" :alt-text="card.name" />
-        <h2 class="text-xl font-semibold mb-2 text-gray-900 dark:text-white">
-          {{ card.name }}
-        </h2>
-        <p class="text-gray-700 dark:text-gray-300 mb-2">
-          {{ card.type_line }}
-        </p>
-        <p class="text-gray-500 dark:text-gray-400">{{ card.oracle_text }}</p>
+        <CardDisplay :card="card" />
       </div>
     </div>
 
@@ -298,7 +269,7 @@
 import { storeToRefs } from "pinia";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import CardImage from "~/components/magic-cards/CardImage.vue";
+import CardDisplay from "~/components/magic-cards/CardDisplay.vue";
 import { useMagicCards } from "~/composables/useMagicCards";
 import { useMagicQuizStore } from "~/stores/magicQuiz";
 import { isSimilarEnough } from "~/utils/levenshtein-match";
