@@ -41,10 +41,16 @@ const signInWithGoogle = async () => {
   errorMsg.value = "";
   googleLoading.value = true;
   try {
+    console.log(window.location.origin);
+    const redirectUrl =
+      process.env.NODE_ENV === "production"
+        ? `${window.location.origin}/auth/callback`
+        : "http://localhost:4000/auth/callback";
+
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: "http://localhost:4000/auth/callback",
+        redirectTo: redirectUrl,
       },
     });
     if (error) {

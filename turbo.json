@@ -11,7 +11,7 @@
       "dependsOn": ["^build"],
       "cache": false,
       "persistent": true,
-      "env": ["NODE_ENV"]
+      "env": ["NODE_ENV", "SUPABASE_URL", "SUPABASE_KEY", "SUPABASE_ANON_KEY"]
     },
     "@archivos-templarios/types#dev": {
       "cache": false,
@@ -28,7 +28,7 @@
     "@archivos-templarios/web#build": {
       "dependsOn": ["^build"],
       "outputs": ["dist/**"],
-      "env": ["NODE_ENV"]
+      "env": ["NODE_ENV", "SUPABASE_URL", "SUPABASE_KEY", "SUPABASE_ANON_KEY"]
     }
   }
 }
