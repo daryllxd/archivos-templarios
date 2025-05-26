@@ -44,7 +44,7 @@ const signInWithGoogle = async () => {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: "http://localhost:4000/auth/callback",
+        redirectTo: `${window.location.origin}/auth/callback`,
       },
     });
     if (error) {
