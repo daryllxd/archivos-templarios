@@ -1,6 +1,8 @@
 import { useState } from "#app";
 import type { ScryfallCard } from "@scryfall/api-types";
-import { computed } from "vue";
+import { useQuery } from "@tanstack/vue-query";
+import { computed, toRaw, watch } from "vue";
+import type { DailyQuizzes, QuizQuestions } from "~/types/supabase";
 
 interface QuizField {
   name: string;
@@ -22,6 +24,11 @@ interface QuizState {
   score: number;
 }
 
+interface QuizResponse {
+  quiz: DailyQuizzes;
+  questions: QuizQuestions[];
+}
+
 export const useMagicCardsQuizDaily = () => {
   // State for the quiz
   const quizState = useState<QuizState>("magic-cards-quiz-daily", () => ({
@@ -30,15 +37,6 @@ export const useMagicCardsQuizDaily = () => {
     isCompleted: false,
     score: 0,
   }));
-
-  // Hardcoded card names for initial implementation
-  const DAILY_CARDS = [
-    "Lightning Bolt",
-    "Counterspell",
-    "Dark Ritual",
-    "Flare of Cultivation",
-    "Deep Analysis",
-  ];
 
   const fetchCard = async (cardName: string): Promise<ScryfallCard.Normal> => {
     const searchUrl = new URL("https://api.scryfall.com/cards/search");
@@ -74,11 +72,36 @@ export const useMagicCardsQuizDaily = () => {
     ];
   };
 
+  // Query for fetching daily quiz
+  const {
+    data: quizData,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["daily-quiz", "magic_cards"],
+    queryFn: async () => {
+      const response = await fetch("/api/quizzes/daily/magic_cards");
+      if (!response.ok) {
+        throw new Error("Failed to fetch quiz");
+      }
+      return response.json() as Promise<QuizResponse>;
+    },
+    staleTime: 1000 * 60 * 60, // Consider data fresh for 1 hour
+    refetchOnWindowFocus: false, // Don't refetch when window regains focus
+  });
+
   const initializeQuiz = async () => {
     try {
+      if (!quizData.value?.questions) {
+        throw new Error("No quiz questions found");
+      }
+
+      const rawQuestions = toRaw(quizData.value.questions);
+
+      // Fetch card details for each question
       const cards = await Promise.all(
-        DAILY_CARDS.map(async (cardName) => {
-          const card = await fetchCard(cardName);
+        rawQuestions.map(async (question) => {
+          const card = await fetchCard(question.question_name);
           return {
             card,
             fields: createQuizFields(card),
@@ -97,6 +120,17 @@ export const useMagicCardsQuizDaily = () => {
       throw error;
     }
   };
+
+  // Watch for quiz data changes
+  watch(
+    quizData,
+    (newData) => {
+      if (newData) {
+        initializeQuiz();
+      }
+    },
+    { immediate: true }
+  );
 
   const submitAnswer = (fieldName: string, answer: string) => {
     const currentCard = quizState.value.cards[quizState.value.currentIndex];
@@ -168,9 +202,10 @@ export const useMagicCardsQuizDaily = () => {
     score,
     isCompleted,
     totalPossibleScore,
+    isLoading,
+    error,
 
     // Methods
-    initializeQuiz,
     submitAnswer,
     resetQuiz,
   };

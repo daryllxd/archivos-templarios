@@ -155,11 +155,9 @@ const {
   quizState,
   currentCard,
   currentFields,
-  progress,
   score,
   isCompleted,
   totalPossibleScore,
-  initializeQuiz,
   submitAnswer,
   resetQuiz,
 } = useMagicCardsQuizDaily();
@@ -177,9 +175,4 @@ const handleReset = () => {
   resetQuiz();
   fieldAnswers.value = {};
 };
-
-// Initialize the quiz when component mounts
-onMounted(() => {
-  initializeQuiz();
-});
 </script>
