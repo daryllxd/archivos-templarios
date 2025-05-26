@@ -1,28 +1,44 @@
 {
   "home": "Inicio",
-  "selectLanguage": "Seleccionar idioma",
+  "selectLanguage": "Seleccionar Idioma",
   "quizzes": "Cuestionarios",
   "about": "Acerca de",
   "register": "Registrarse",
-  "login": "Iniciar sesión",
-  "signOut": "Cerrar sesión",
+  "login": "Iniciar Sesión",
+  "signOut": "Cerrar Sesión",
   "switchToDark": "Cambiar a modo oscuro",
   "switchToLight": "Cambiar a modo claro",
+  "quiz": {
+    "enterCardName": "Ingresa el nombre de la carta...",
+    "submit": "Enviar",
+    "completed": "¡Cuestionario Completado!",
+    "finalScore": "Tu puntuación: {score} de {total}",
+    "tryAgain": "Intentar de Nuevo",
+    "results": "Resultados",
+    "fields": {
+      "name": "Nombre de la Carta (en Inglés)",
+      "namePlaceholder": "Ingresa el nombre de la carta en inglés...",
+      "type_line": "Línea de Tipo (en Inglés)",
+      "type_linePlaceholder": "Ingresa la línea de tipo en inglés...",
+      "oracle_text": "Texto de Oracle (en Inglés)",
+      "oracle_textPlaceholder": "Ingresa el texto de Oracle en inglés..."
+    }
+  },
   "profile": {
     "title": "Perfil",
     "memberSince": "Miembro desde",
     "loading": "Cargando perfil...",
     "name": "Nombre",
-    "namePlaceholder": "Introduce tu nombre",
-    "url": "URL del perfil",
-    "urlPlaceholder": "Introduce la URL de tu perfil",
+    "namePlaceholder": "Ingresa tu nombre",
+    "url": "URL del Perfil",
+    "urlPlaceholder": "Ingresa la URL de tu perfil",
     "biography": "Biografía",
     "biographyPlaceholder": "Cuéntanos sobre ti...",
     "country": "País",
     "selectCountry": "Selecciona un país"
   },
   "common": {
-    "save": "Guardar cambios",
+    "save": "Guardar Cambios",
     "saving": "Guardando..."
   },
   "collage": {
@@ -32,7 +48,7 @@
     "maxImages": "Selecciona hasta 4 imágenes",
     "saveCollage": "Guardar Collage",
     "savingCollage": "Guardando...",
-    "success": "¡Collage guardado con éxito!",
+    "success": "¡Collage guardado exitosamente!",
     "error": "Error al guardar el collage",
     "gridSize": "Tamaño de la Cuadrícula",
     "layoutStyle": "Estilo de Diseño",

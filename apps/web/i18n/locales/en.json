@@ -8,6 +8,22 @@
   "signOut": "Sign Out",
   "switchToDark": "Switch to dark mode",
   "switchToLight": "Switch to light mode",
+  "quiz": {
+    "enterCardName": "Enter card name...",
+    "submit": "Submit",
+    "completed": "Quiz Completed!",
+    "finalScore": "Your score: {score} out of {total}",
+    "tryAgain": "Try Again",
+    "results": "Results",
+    "fields": {
+      "name": "Card Name (in English)",
+      "namePlaceholder": "Enter the English card name...",
+      "type_line": "Type Line (in English)",
+      "type_linePlaceholder": "Enter the English type line...",
+      "oracle_text": "Oracle Text (in English)",
+      "oracle_textPlaceholder": "Enter the English oracle text..."
+    }
+  },
   "profile": {
     "title": "Profile",
     "memberSince": "Member since",
