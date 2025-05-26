@@ -16,8 +16,8 @@ export interface CardOptions {
 }
 
 // Debug flags
-const DEBUG_FORCE_CARD = true; // Set to true to always return Deep Analysis
-const DEBUG_CACHE_RESPONSES = true; // Set to true to cache responses
+const DEBUG_FORCE_CARD = false; // Set to true to always return Deep Analysis
+const DEBUG_CACHE_RESPONSES = false; // Set to true to cache responses
 
 // Debug functions
 export const debugMagicCards = {
@@ -25,7 +25,7 @@ export const debugMagicCards = {
     return useState<Record<string, CardResponse>>("magic-cards-cache").value;
   },
   clearCache: () => {
-    useState<Record<string, CardResponse>>("magic-cards-cache").value = {};
+    useState<Record<stzring, CardResponse>>("magic-cards-cache").value = {};
   },
   setCacheEntry: (key: string, value: CardResponse) => {
     useState<Record<string, CardResponse>>("magic-cards-cache").value[key] =
@@ -60,10 +60,12 @@ export const useMagicCards = (
 
       let english: ScryfallCard.Normal | null = null;
 
+      // Double faced card: Ajani, Nacatl Pariah
+      // Adventure - Ondu Knotmaster
       if (DEBUG_FORCE_CARD) {
         // Force Deep Analysis for debugging
         const searchUrl = new URL("https://api.scryfall.com/cards/search");
-        searchUrl.searchParams.set("q", 'name:"Wing It"');
+        searchUrl.searchParams.set("q", 'name:"Shifting Woodland"');
         const response = await fetch(searchUrl.toString());
         const data = await response.json();
         english = data.data[0] as ScryfallCard.Normal;
