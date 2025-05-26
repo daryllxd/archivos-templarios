@@ -9,7 +9,7 @@
       </h2>
       <div
         class="flex gap-1 text-lg"
-        v-html="replaceManaCosts(card.mana_cost)"
+        v-html="sanitizeAndReplaceMana(card.mana_cost)"
       ></div>
     </div>
     <p class="text-gray-700 dark:text-gray-300 mb-2">
@@ -17,21 +17,27 @@
     </p>
     <p
       class="text-gray-500 dark:text-gray-400"
-      v-html="replaceManaCosts(card.printed_text || card.oracle_text)"
+      v-html="sanitizeAndReplaceMana(card.printed_text || card.oracle_text)"
     ></p>
     <p
       v-if="card.flavor_text"
       class="text-gray-500 dark:text-gray-400 italic"
-      v-html="replaceManaCosts(card.flavor_text)"
+      v-html="sanitizeAndReplaceMana(card.flavor_text)"
     ></p>
   </div>
 </template>
 
 <script setup lang="ts">
 import type { ScryfallCard } from "@scryfall/api-types";
+import DOMPurify from "dompurify";
 import "mana-font/css/mana.css";
 import { replaceManaCosts } from "~/utils/mana-cost";
 import CardImage from "./CardImage.vue";
+
+const sanitizeAndReplaceMana = (text: string | null | undefined): string => {
+  const processed = replaceManaCosts(text);
+  return DOMPurify.sanitize(processed);
+};
 
 defineProps<{
   card: ScryfallCard.Normal;
